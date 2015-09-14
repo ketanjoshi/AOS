@@ -9,10 +9,12 @@ DESCRIPTION:
 A distributed system of 'n' nodes, information of which is specified in a config file.
 
 Every node selects a random label value (integer) at the beginning.
-Then each node circulates a token through the system that visits given nodes in the same order and returns back to the source node of that node. The path to be taken by the token is mentioned in the config file.
+Node then circulates a token through the system that visits given nodes in the same order and returns back to the source node of that node. The path to be taken by the token is mentioned in the config file.
+A node can send any number of tokens (or no token at all, it just listens and forwards the tokens).
 
 Each token can take a different path. The path may contain same node twice, a cycle or may not contain all the nodes.
 When token computes the 'sum' of the label values along the way.
 The token should simply traverse the nodes in the given order in the path and add the label (even it means visiting the node twice and adding the label).
 
 Config file name should be config.txt. Keep config file in the directory from which the program is launched.
+Refer sample config file

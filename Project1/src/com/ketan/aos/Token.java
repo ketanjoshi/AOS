@@ -5,9 +5,13 @@ import java.util.Arrays;
 
 public class Token implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    private static final String SEPARATOR = " -> ";
+
     private final int originator;
     private final String[] path;
 
+    private int id;
     private int currentIndex;
     private int sum;
     private boolean isFinished;
@@ -23,6 +27,14 @@ public class Token implements Serializable {
         this.isFinished = false;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void addToSum(int value) {
         sum += value;
     }
@@ -31,6 +43,10 @@ public class Token implements Serializable {
         return sum;
     }
 
+    /**
+     * Checks if the current node is the last node in the path
+     * @return true if current node is the last one in the path, else false
+     */
     private boolean isLastNode() {
         if(currentIndex > path.length - 1) {
             isFinished = true;
@@ -38,6 +54,11 @@ public class Token implements Serializable {
         return isFinished;
     }
 
+    /**
+     * Returns next node in the path, if exists.
+     * If end of the path is reached then returns the originator of the token
+     * @return next node
+     */
     public int getNextPathNode() {
         currentIndex++;
         return isLastNode()
@@ -45,6 +66,10 @@ public class Token implements Serializable {
                 : Integer.parseInt(path[currentIndex]);
     }
 
+    /**
+     * Checks if the token has traversed its complete path
+     * @return true if path is completed, else false
+     */
     public boolean isConsumed() {
         return isFinished;
     }
@@ -53,6 +78,17 @@ public class Token implements Serializable {
     public String toString() {
         return "Originator: " + originator
                 + " Token: " + Arrays.asList(path)
-                + " Sum: " + sum;
+                + " Sum: " + sum + "\n";
     }
+
+    public String getPrintablePath() {
+        StringBuilder builder = new StringBuilder()
+                                    .append(id).append(SEPARATOR);
+        for (String node : path) {
+            builder.append(node).append(SEPARATOR);
+        }
+        builder.append(id);
+        return builder.toString();
+    }
+
 }

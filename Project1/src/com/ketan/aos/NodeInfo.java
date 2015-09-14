@@ -23,7 +23,6 @@ public class NodeInfo {
 
     @Override
     public String toString() {
-        return " Host: " + hostName
-                + " Port: " + portNumber;
+        return hostName + ":" + portNumber + "\n";
     }
 }
