@@ -1,42 +1,38 @@
-package com.ketan.aos;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * Class to read configurations and setup necessary environment variables
+ * @author ketan
+ */
 public class AppConfigurations {
 
-    private static final String CONFIG_FILE = "./config.txt";
     private static final char COMMENT = '#';
-    private static final String SPLITTER = " ";
+    private static final String NETID = "kkj140030";
 
     private static HashMap<Integer, NodeInfo> nodeMap = new HashMap<>();
     private static HashMap<Integer, Tokens> tokenMap = new HashMap<>();
-    private static String netId;
 
     /**
      * Reads the configuration file and sets up environment such as machine
      * name, port number, other machines in the system
      */
-    public static void setupApplicationEnvironment() {
+    public static void setupApplicationEnvironment(String configFileName) {
 
-        /**
-         * TODO : Tidy up this function, make it more intuitive and readable
-         */
         Scanner lineScanner = null;
         try (
-                Scanner scanner = new Scanner(new File(CONFIG_FILE))
+                Scanner scanner = new Scanner(new File(configFileName))
             ) {
 
             String input = getNextValidInputLine(scanner);
 
-            String[] split = input.split(SPLITTER);
-            int totalNodes = Integer.parseInt(split[0]);
-            netId = split[1];
-            System.out.println(totalNodes);
-            System.out.println(netId);
+            lineScanner = new Scanner(input);
+            int totalNodes = lineScanner.nextInt();
+            lineScanner.close();
 
             input = getNextValidInputLine(scanner);
 
@@ -116,10 +112,11 @@ public class AppConfigurations {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            
         } finally {
             lineScanner.close();
         }
+
     }
 
     /**
@@ -145,12 +142,19 @@ public class AppConfigurations {
         return nodeMap;
     }
 
-    public static HashMap<Integer, Tokens> getTokenMap() {
-        return tokenMap;
+    public static Tokens getNodeTokens(final int index) {
+        return tokenMap.get(index);
     }
 
     public static String getNetId() {
-        return netId;
+        return NETID;
     }
 
+    public static String getLogFileName(final int nodeId, final String configFileName) {
+        String fileName = Paths.get(configFileName).getFileName().toString();
+        return String.format("%s-%s-%s.out", 
+                fileName.substring(0, fileName.lastIndexOf('.')),
+                NETID,
+                nodeId);
+    }
 }

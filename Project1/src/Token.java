@@ -1,8 +1,11 @@
-package com.ketan.aos;
-
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * Serializable class to represent the token.
+ * It also keeps track of its own sum, path, current index on the path. 
+ * @author ketan
+ */
 public class Token implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,6 +28,9 @@ public class Token implements Serializable {
         this.currentIndex = -1;
         this.sum = 0;
         this.isFinished = false;
+        if(path.length == 0) {
+            this.isFinished = true;
+        }
     }
 
     public int getId() {
@@ -83,11 +89,11 @@ public class Token implements Serializable {
 
     public String getPrintablePath() {
         StringBuilder builder = new StringBuilder()
-                                    .append(id).append(SEPARATOR);
+                                    .append(originator).append(SEPARATOR);
         for (String node : path) {
             builder.append(node).append(SEPARATOR);
         }
-        builder.append(id);
+        builder.append(originator);
         return builder.toString();
     }
 

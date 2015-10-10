@@ -16,5 +16,12 @@ Each token can take a different path. The path may contain same node twice, a cy
 When token computes the 'sum' of the label values along the way.
 The token should simply traverse the nodes in the given order in the path and add the label (even it means visiting the node twice and adding the label).
 
-Config file name should be config.txt. Keep config file in the directory from which the program is launched.
-Refer sample config file
+INSTRUCTIONS TO RUN THE CODE:
+
+NOTE - Launch the launcher_utd.sh from the SAME directory where it resides (unzipped location)
+
+1. Launcher file will compile the code and copy the CLASS files to $HOME directory of the user (e.g. In my case /home/004/k/kk/kkj140030)
+2. It will then launch the code on different machines under the user (netid) mentioned in the config file (config_utd.txt)
+3. The launched code will generate ouput files inside $HOME directory
+4. The processes can be killed using cleanup_utd.sh file
+5. Cleanup file will kill all the processes which launcher started and remove all the CLASS files from $HOME directory

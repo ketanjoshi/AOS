@@ -1,5 +1,9 @@
-package com.ketan.aos;
+import java.util.Objects;
 
+/**
+ * Class to represent node connection information
+ * @author ketan
+ */
 public class NodeInfo {
 
     private final String hostName;
@@ -25,4 +29,20 @@ public class NodeInfo {
     public String toString() {
         return hostName + ":" + portNumber + "\n";
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hostName, portNumber);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof NodeInfo))
+            return false;
+
+        NodeInfo that = (NodeInfo) other;
+        return this.hostName.equalsIgnoreCase(that.hostName)
+            && this.portNumber == that.portNumber;
+    }
+
 }
