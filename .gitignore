@@ -1,5 +1,8 @@
 bin
 .metadata
 .classpath
+.recommenders
 *~
 target/
+.project
+.settings
