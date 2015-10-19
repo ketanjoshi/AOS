@@ -12,4 +12,28 @@ public class Payload implements Serializable {
         System.arraycopy(vectorClock, 0, this.vectorClock, 0, vectorClock.length);
     }
 
+    public int[] getVectorClock() {
+        return vectorClock;
+    }
+
+    public void setVectorClock(int[] vectorClock) {
+        this.vectorClock = vectorClock;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public int getInTransitMsgCount() {
+        return inTransitMsgCount;
+    }
+
+    public void setInTransitMsgCount(int inTransitMsgCount) {
+        this.inTransitMsgCount = inTransitMsgCount;
+    }
+
 }

@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- * Class to store and access global scope variables
+ * Class to store and access global scope network communication variables
  * @author ketan
  */
 public class NetworkComponents {

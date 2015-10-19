@@ -7,7 +7,7 @@ public class SnapshotCapturer implements Runnable {
     }
 
     public void initiateSnapshotProcess() {
-        Message snapshotMsg = new Message(null, MessageType.MARKER);
+        Message snapshotMsg = new Message(Globals.id, null, MessageType.MARKER);
     }
 
     @Override

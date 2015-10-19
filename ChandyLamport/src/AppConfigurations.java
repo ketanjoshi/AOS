@@ -23,6 +23,7 @@ public class AppConfigurations {
      */
     public static void setupApplicationEnvironment(String configFileName, int id) {
 
+        Globals.id = id;
         Scanner lineScanner = null;
         try (
                 Scanner scanner = new Scanner(new File(configFileName))
@@ -70,31 +71,41 @@ public class AppConfigurations {
 
             input = getNextValidInputLine(scanner);
 
-             int lineNumber = 0;
+            int lineNumber = 0;
+            ArrayList<Integer> neighbors = new ArrayList<>();
             while (scanner.hasNext()) {
-                if (lineNumber != id) {
-                    input = scanner.nextLine();
-                    lineNumber++;
-                    continue;
-                }
                 lineScanner = new Scanner(input);
-                ArrayList<Integer> neighbors = new ArrayList<>();
-                while (lineScanner.hasNext()) {
-                    String neighborId = lineScanner.next();
-                    if (neighborId.charAt(0) == COMMENT) {
-                        break;
+                if (lineNumber != id) {
+                    while (lineScanner.hasNext()) {
+                        String neighbor = lineScanner.next();
+                        if (neighbor.charAt(0) == COMMENT) {
+                            break;
+                        }
+                        int neighborId = Integer.parseInt(neighbor);
+                        if (neighborId == id && !neighbors.contains(lineNumber) && lineNumber != id) {
+                            neighbors.add(lineNumber);
+                        }
                     }
-                    neighbors.add(Integer.parseInt(neighborId));
+                } else {
+                    while (lineScanner.hasNext()) {
+                        String neighbor = lineScanner.next();
+                        if (neighbor.charAt(0) == COMMENT) {
+                            break;
+                        }
+                        int neighborId = Integer.parseInt(neighbor);
+                        if (!neighbors.contains(neighborId) && neighborId != id) {
+                            neighbors.add(neighborId);
+                        }
+                    }
                 }
+                input = scanner.nextLine();
                 lineScanner.close();
-                neighborNodes = neighbors;
-                break;
+                lineNumber++;
             }
+            neighborNodes = neighbors;
 
         } catch (IOException e) {
-            
-        } finally {
-            lineScanner.close();
+            e.printStackTrace();
         }
 
     }

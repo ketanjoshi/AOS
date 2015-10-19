@@ -12,7 +12,9 @@ public class Globals {
 
     public static boolean markerMsgReceived = false;
     public static boolean isActive = false;
+    public static Integer sentMessageCount = 0;
 
+    public static int id;
     public static int clusterSize;
     public static int minPerActive;
     public static int maxPerActive;
@@ -47,4 +49,5 @@ public class Globals {
                     + "Last log message : " + message);
         }
     }
+
 }
