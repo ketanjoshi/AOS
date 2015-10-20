@@ -100,6 +100,29 @@ public class ClusterNode {
                 + "\nNodeMap : " + nodeMap;
     }
 
+    private ArrayList<Thread> launchReceiverThreads() throws InterruptedException {
+        // Launch receiver threads
+        ArrayList<Thread> receiverThreadPool = new ArrayList<>();
+        for (Integer neighborId : neighbors) {
+            ObjectInputStream stream = NetworkComponents.getReaderStream(neighborId);
+            MessageReceiver receiver = new MessageReceiver(stream);
+            Thread thread = new Thread(receiver);
+            thread.start();
+            receiverThreadPool.add(thread);
+        }
+        Thread.sleep(WAIT_TIME);
+        return receiverThreadPool;
+
+        // Launch sender thread
+    }
+
+    private Thread launchSenderThread() {
+        MessageSender sender = new MessageSender();
+        Thread thread = new Thread(sender);
+        thread.start();
+        return thread;
+    }
+
     public static void main(String[] args) {
 
         int id = Integer.parseInt(args[0]);
@@ -112,7 +135,19 @@ public class ClusterNode {
         try {
             cNode.initializeNode(configFileName, id);
             Globals.log(cNode.toString());
+
             cNode.establishConnections();
+            ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
+            Thread senderThread = cNode.launchSenderThread();
+
+            senderThread.join();
+            for (Thread thread : receiverThreads) {
+                thread.join();
+            }
+
+            /**
+             *  TODO : Make MAP protocol working
+             */
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
             e.printStackTrace();
@@ -120,11 +155,6 @@ public class ClusterNode {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
-
-        /**
-         *  TODO : 1. Spawn listener threads and a sender thread
-         *  2. Make MAP protocol working
-         */
 
         System.exit(0);
     }

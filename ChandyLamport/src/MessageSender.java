@@ -37,6 +37,11 @@ public class MessageSender implements Runnable {
             sendRandomMessages(numOfMsg);
 
             Globals.isActive = false;
+
+            if (Globals.sentMessageCount >= Globals.maxNumber) {
+                Globals.log("Stopping sender thread.");
+                break;
+            }
         }
 
     }
