@@ -1,0 +1,69 @@
+NodeId : 0
+NodeInfo : localhost:3332
+Neighbors : [1, 2, 3]
+NodeMap : {0=localhost:3332
+, 1=localhost:5678
+, 2=localhost:5231
+, 3=localhost:3342
+}
+Trying to connect 1 - localhost:5678
+
+Connected successfully : 1
+Trying to connect 2 - localhost:5231
+
+Connected successfully : 2
+Trying to connect 3 - localhost:3342
+
+Connected successfully : 3
+Sent message to 1
+SentMessageCount : 1
+Sent message to 2
+SentMessageCount : 2
+Sent message to 2
+SentMessageCount : 3
+Sent message to 2
+SentMessageCount : 4
+Sent message to 1
+SentMessageCount : 5
+Sent message to 2
+SentMessageCount : 6
+Sent message to 1
+SentMessageCount : 7
+Received message :Id : 2Payload : VectorClock : [ 6 0 13 9  Type : APPLICATION
+Merged clock : VectorClock : [ 8 0 13 9  
+Sent message to 2
+SentMessageCount : 8
+Sent message to 2
+SentMessageCount : 9
+Received message :Id : 2Payload : VectorClock : [ 9 0 16 10  Type : APPLICATION
+Merged clock : VectorClock : [ 11 0 16 10  
+Received message :Id : 3Payload : VectorClock : [ 6 0 11 11  Type : APPLICATION
+Merged clock : VectorClock : [ 12 0 16 11  
+Sent message to 1
+SentMessageCount : 10
+Sent message to 3
+SentMessageCount : 11
+Sent message to 2
+SentMessageCount : 12
+Received message :Id : 1Payload : VectorClock : [ 13 11 19 13  Type : APPLICATION
+Merged clock : VectorClock : [ 16 11 19 13  
+Sent message to 3
+SentMessageCount : 13
+Received message :Id : 2Payload : VectorClock : [ 17 14 25 19  Type : APPLICATION
+Merged clock : VectorClock : [ 18 14 25 19  
+Received message :Id : 3Payload : VectorClock : [ 17 16 27 22  Type : APPLICATION
+Merged clock : VectorClock : [ 19 16 27 22  
+Sent message to 1
+SentMessageCount : 14
+Received message :Id : 1Payload : VectorClock : [ 20 20 28 22  Type : APPLICATION
+Merged clock : VectorClock : [ 22 20 28 22  
+Sent message to 1
+SentMessageCount : 15
+MaxNumber message reached.
+Stopping sender thread.
+Received message :Id : 2Payload : VectorClock : [ 17 17 30 24  Type : APPLICATION
+Merged clock : VectorClock : [ 23 20 30 24  
+Received message :Id : 2Payload : VectorClock : [ 21 22 33 27  Type : APPLICATION
+Merged clock : VectorClock : [ 24 22 33 27  
+Received message :Id : 1Payload : VectorClock : [ 21 23 28 22  Type : APPLICATION
+Merged clock : VectorClock : [ 25 23 33 27  

@@ -27,7 +27,15 @@ public class MessageReceiver implements Runnable {
                 if (type.equals(MessageType.APPLICATION)) {
                     // application message
                     mergeVectorClocks(message);
-                    if (Globals.isActive) {
+
+                    Globals.log("Received message : " + message 
+                            + "\nMerged clock : " + Globals.getPrintableGlobalClock());
+
+                    boolean isNodeActive = false;
+                    synchronized (Globals.isActive) {
+                        isNodeActive = Globals.isActive;
+                    }
+                    if (isNodeActive) {
                         // Already active, ignore the message
                         continue;
                     }
@@ -37,11 +45,18 @@ public class MessageReceiver implements Runnable {
                     }
 
                     // Can become active
-                    Globals.isActive = true;
+                    synchronized (Globals.isActive) {
+                        Globals.isActive = true;
+                    }
 
                 }
                 else if(type.equals(MessageType.MARKER)) {
                     // Record state and send
+                    throw new RuntimeException("Marker msg not implemented");
+                }
+                else if(type.equals(MessageType.FINISH)) {
+                    throw new RuntimeException("Finish msg not implemented");
+                    // Exit
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

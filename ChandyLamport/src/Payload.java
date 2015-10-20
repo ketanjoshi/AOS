@@ -36,4 +36,13 @@ public class Payload implements Serializable {
         this.inTransitMsgCount = inTransitMsgCount;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("VectorClock : [ ");
+        for(int i = 0; i < vectorClock.length; i++) {
+            builder.append(vectorClock[i] + " ");
+        }
+        builder.append("]");
+        return builder.toString();
+    }
 }

@@ -11,7 +11,7 @@ public class Globals {
     public static final Random RANDOM = new Random();
 
     public static boolean markerMsgReceived = false;
-    public static boolean isActive = false;
+    public static Boolean isActive = false;
     public static Integer sentMessageCount = 0;
 
     public static int id;
@@ -48,6 +48,16 @@ public class Globals {
             System.err.println("Problem while logging..."
                     + "Last log message : " + message);
         }
+    }
+
+    public static String getPrintableGlobalClock() {
+        StringBuilder builder = new StringBuilder("VectorClock : [ ");
+        for(int i = 0; i < vectorClock.length; i++) {
+            builder.append(vectorClock[i] + " ");
+        }
+        builder.append("]");
+        return builder.toString();
+
     }
 
 }

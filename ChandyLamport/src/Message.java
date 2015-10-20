@@ -27,4 +27,10 @@ public class Message implements Serializable {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "Id : " + id
+                + " Payload : " + payload
+                + " Type : " + type;
+    }
 }

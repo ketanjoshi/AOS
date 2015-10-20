@@ -1,0 +1,61 @@
+NodeId : 1
+NodeInfo : localhost:5678
+Neighbors : [0, 2, 3]
+NodeMap : {0=localhost:3332
+, 1=localhost:5678
+, 2=localhost:5231
+, 3=localhost:3342
+}
+Trying to connect 2 - localhost:5231
+
+Connected successfully : 2
+Trying to connect 3 - localhost:3342
+
+Connected successfully : 3
+Connected : 0
+Received message :Id : 0Payload : VectorClock : [ 1 0 0 0  Type : APPLICATION
+Merged clock : VectorClock : [ 1 1 0 0  
+Received message :Id : 0Payload : VectorClock : [ 5 0 0 0  Type : APPLICATION
+Merged clock : VectorClock : [ 5 2 0 0  
+Received message :Id : 0Payload : VectorClock : [ 7 0 0 0  Type : APPLICATION
+Merged clock : VectorClock : [ 7 3 0 0  
+Received message :Id : 3Payload : VectorClock : [ 6 0 7 4  Type : APPLICATION
+Merged clock : VectorClock : [ 7 4 7 4  
+Received message :Id : 2Payload : VectorClock : [ 6 0 10 6  Type : APPLICATION
+Merged clock : VectorClock : [ 7 5 10 6  
+Received message :Id : 3Payload : VectorClock : [ 6 0 8 7  Type : APPLICATION
+Merged clock : VectorClock : [ 7 6 10 7  
+Received message :Id : 0Payload : VectorClock : [ 13 0 16 11  Type : APPLICATION
+Merged clock : VectorClock : [ 13 7 16 11  
+Sent message to 3
+SentMessageCount : 1
+Received message :Id : 2Payload : VectorClock : [ 13 8 19 13  Type : APPLICATION
+Merged clock : VectorClock : [ 13 9 19 13  
+Sent message to 3
+SentMessageCount : 2
+Sent message to 0
+SentMessageCount : 3
+Received message :Id : 2Payload : VectorClock : [ 15 10 23 16  Type : APPLICATION
+Merged clock : VectorClock : [ 15 12 23 16  
+Received message :Id : 3Payload : VectorClock : [ 17 11 21 19  Type : APPLICATION
+Merged clock : VectorClock : [ 17 13 23 19  
+Sent message to 2
+SentMessageCount : 4
+Received message :Id : 3Payload : VectorClock : [ 17 11 21 20  Type : APPLICATION
+Merged clock : VectorClock : [ 17 16 23 20  
+Sent message to 2
+SentMessageCount : 5
+Sent message to 3
+SentMessageCount : 6
+Received message :Id : 0Payload : VectorClock : [ 20 16 27 22  Type : APPLICATION
+Merged clock : VectorClock : [ 20 18 27 22  
+Received message :Id : 2Payload : VectorClock : [ 17 16 28 20  Type : APPLICATION
+Merged clock : VectorClock : [ 20 19 28 22  
+Sent message to 0
+SentMessageCount : 7
+Received message :Id : 0Payload : VectorClock : [ 21 16 27 22  Type : APPLICATION
+Merged clock : VectorClock : [ 21 21 28 22  
+Sent message to 3
+SentMessageCount : 8
+Sent message to 0
+SentMessageCount : 9

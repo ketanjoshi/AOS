@@ -113,10 +113,10 @@ public class ClusterNode {
         Thread.sleep(WAIT_TIME);
         return receiverThreadPool;
 
-        // Launch sender thread
     }
 
     private Thread launchSenderThread() {
+        // Launch sender thread
         MessageSender sender = new MessageSender();
         Thread thread = new Thread(sender);
         thread.start();
@@ -139,6 +139,8 @@ public class ClusterNode {
             cNode.establishConnections();
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
+
+            Globals.isActive = id % 2 == 0;
 
             senderThread.join();
             for (Thread thread : receiverThreads) {
