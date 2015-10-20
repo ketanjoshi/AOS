@@ -1,13 +1,13 @@
 
-public class SnapshotCapturer implements Runnable {
+public class SnapshotInitiator implements Runnable {
 
     private static final long SNAPSHOT_DELAY = Globals.snapshotDelay;
 
-    public SnapshotCapturer() {
+    public SnapshotInitiator() {
     }
 
     public void initiateSnapshotProcess() {
-        Message snapshotMsg = new Message(Globals.id, null, MessageType.MARKER);
+        Message snapshotMessage = new Message(Globals.id, null, MessageType.MARKER);
     }
 
     @Override

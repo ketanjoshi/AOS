@@ -13,6 +13,7 @@ public class Globals {
     public static boolean markerMsgReceived = false;
     public static Boolean isActive = false;
     public static Integer sentMessageCount = 0;
+    public static Integer receivedMessageCount = 0;
 
     public static int id;
     public static int clusterSize;
@@ -58,6 +59,42 @@ public class Globals {
         builder.append("]");
         return builder.toString();
 
+    }
+
+    public static synchronized int[] getGlobalVectorClock() {
+        return vectorClock;
+    }
+
+    public static synchronized int getSentMessageCount() {
+        return sentMessageCount;
+    }
+
+    public static synchronized int getReceivedMessageCount() {
+        return receivedMessageCount;
+    }
+
+    public static synchronized void incrementSentMessageCount() {
+        sentMessageCount++;
+    }
+
+    public static synchronized void incrementReceivedMessageCount() {
+        receivedMessageCount++;
+    }
+
+    public static synchronized boolean isNodeActive() {
+        return isActive;
+    }
+
+    public static synchronized void setNodeActive(boolean isNodeActive) {
+        isActive = isNodeActive;
+    }
+
+    public static synchronized boolean isMarkerMsgReceived() {
+        return markerMsgReceived;
+    }
+
+    public static synchronized void setMarkerMsgReceived(boolean markerReceived) {
+        markerMsgReceived = markerReceived;
     }
 
 }

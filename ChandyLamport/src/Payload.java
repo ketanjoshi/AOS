@@ -5,7 +5,19 @@ public class Payload implements Serializable {
 
     private int[] vectorClock;
     private boolean isActive;
-    private int inTransitMsgCount;
+    private int sentMsgCount;
+    private int receivedMsgCount;
+
+    public Payload(final int[] vectorClock,
+            final boolean isActive,
+            final int sentMsgCount,
+            final int receivedMsgCount) {
+        this.vectorClock = new int[vectorClock.length];
+        System.arraycopy(vectorClock, 0, this.vectorClock, 0, vectorClock.length);
+        this.isActive = isActive;
+        this.sentMsgCount = sentMsgCount;
+        this.receivedMsgCount = receivedMsgCount;
+    }
 
     public Payload(final int[] vectorClock) {
         this.vectorClock = new int[vectorClock.length];
@@ -24,16 +36,12 @@ public class Payload implements Serializable {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public int getSentMsgCount() {
+        return sentMsgCount;
     }
 
-    public int getInTransitMsgCount() {
-        return inTransitMsgCount;
-    }
-
-    public void setInTransitMsgCount(int inTransitMsgCount) {
-        this.inTransitMsgCount = inTransitMsgCount;
+    public int getReceivedMsgCount() {
+        return receivedMsgCount;
     }
 
     @Override
@@ -45,4 +53,5 @@ public class Payload implements Serializable {
         builder.append("]");
         return builder.toString();
     }
+
 }

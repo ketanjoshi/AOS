@@ -139,12 +139,19 @@ public class ClusterNode {
             cNode.establishConnections();
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
+            Thread snapshotThread = null;
+            if(id == 0) {
+                snapshotThread = cNode.launchSnapshotInitiator();
+            }
 
             Globals.isActive = id % 2 == 0;
 
             senderThread.join();
             for (Thread thread : receiverThreads) {
                 thread.join();
+            }
+            if(snapshotThread != null) {
+                snapshotThread.join();
             }
 
             /**
@@ -159,6 +166,13 @@ public class ClusterNode {
         }
 
         System.exit(0);
+    }
+
+    private Thread launchSnapshotInitiator() {
+        SnapshotInitiator snapshotInitiator = new SnapshotInitiator();
+        Thread thread = new Thread(snapshotInitiator);
+        thread.start();
+        return thread;
     }
 
 }

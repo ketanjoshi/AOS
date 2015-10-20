@@ -29,20 +29,15 @@ public class MessageSender implements Runnable {
     @Override
     public void run() {
         while (isRunning) {
-            boolean isNodeActive = false;
-            synchronized (Globals.isActive) {
-                isNodeActive = Globals.isActive;
-            }
-            if (!isNodeActive) {
+
+            if (!Globals.isNodeActive()) {
                 continue;
             }
 
             int numOfMsg = RANDOM_GENERATOR.nextInt(DIFF) + MIN_PER_ACTIVE;
             sendRandomMessages(numOfMsg);
 
-            synchronized (Globals.isActive) {
-                Globals.isActive = false;
-            }
+            Globals.setNodeActive(false);
 
             if (Globals.sentMessageCount >= Globals.maxNumber) {
                 Globals.log("Stopping sender thread.");
@@ -70,9 +65,8 @@ public class MessageSender implements Runnable {
                 synchronized (outputStream) {
                     outputStream.writeObject(message);
                 }
-                synchronized (Globals.sentMessageCount) {
-                    Globals.sentMessageCount++;
-                }
+                Globals.incrementSentMessageCount();
+
                 Globals.log("Sent message to " + nextNodeId);
                 Globals.log("SentMessageCount : " + Globals.sentMessageCount);
                 if (Globals.sentMessageCount >= Globals.maxNumber) {

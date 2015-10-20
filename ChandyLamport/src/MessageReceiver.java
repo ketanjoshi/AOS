@@ -25,34 +25,11 @@ public class MessageReceiver implements Runnable {
                 Message message = (Message) inputStream.readObject();
                 MessageType type = message.getType();
                 if (type.equals(MessageType.APPLICATION)) {
-                    // application message
-                    mergeVectorClocks(message);
-
-                    Globals.log("Received message : " + message 
-                            + "\nMerged clock : " + Globals.getPrintableGlobalClock());
-
-                    boolean isNodeActive = false;
-                    synchronized (Globals.isActive) {
-                        isNodeActive = Globals.isActive;
-                    }
-                    if (isNodeActive) {
-                        // Already active, ignore the message
-                        continue;
-                    }
-                    if (Globals.sentMessageCount >= Globals.maxNumber) {
-                        // Cannot become active, so ignore
-                        continue;
-                    }
-
-                    // Can become active
-                    synchronized (Globals.isActive) {
-                        Globals.isActive = true;
-                    }
-
+                    handleApplicationMessage(message);
                 }
                 else if(type.equals(MessageType.MARKER)) {
-                    // Record state and send
-                    throw new RuntimeException("Marker msg not implemented");
+                    Globals.setMarkerMsgReceived(true);
+                    handleMarkerMessage(message);
                 }
                 else if(type.equals(MessageType.FINISH)) {
                     throw new RuntimeException("Finish msg not implemented");
@@ -61,11 +38,49 @@ public class MessageReceiver implements Runnable {
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+    }
 
+    private void handleApplicationMessage(Message message) {
+        // Application message
+        Globals.incrementReceivedMessageCount();
+        mergeVectorClocks(message);
+
+        Globals.log("Received message : " + message 
+                + "\nMerged clock : " + Globals.getPrintableGlobalClock());
+
+        if (Globals.isNodeActive()) {
+            // Already active, ignore the message
+            return;
+        }
+        if (Globals.sentMessageCount >= Globals.maxNumber) {
+            // Cannot become active, so ignore
+            return;
         }
 
+        // Can become active
+        Globals.setNodeActive(true);
     }
-    
+
+    private void handleMarkerMessage(Message message) {
+        // Record state and send
+        Message replyMessage = null;
+        if(Globals.isMarkerMsgReceived()) {
+            // Send ignore message
+            replyMessage =  new Message(ID, null, MessageType.IGNORED);
+        }
+        else {
+            // Send local state as reply
+            Payload p = new Payload(Globals.getGlobalVectorClock(), Globals.isNodeActive(),
+                    Globals.getSentMessageCount(), Globals.getReceivedMessageCount());
+            replyMessage = new Message(ID, p, MessageType.LOCAL_STATE);
+        }
+
+        SnapshotSender snapshotSender = new SnapshotSender(message.getId(), replyMessage);
+        Thread thread = new Thread(snapshotSender);
+        thread.start();
+    }
+
     private void mergeVectorClocks(Message message) {
         int[] piggybackVectorClock = message.getPayload().getVectorClock();
         synchronized (Globals.vectorClock) {
