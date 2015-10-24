@@ -6,56 +6,57 @@ NodeMap : {0=localhost:3332
 , 2=localhost:5231
 , 3=localhost:3342
 }
+Connected : 0
 Trying to connect 2 - localhost:5231
 
 Connected successfully : 2
 Trying to connect 3 - localhost:3342
 
 Connected successfully : 3
-Connected : 0
-Received message :Id : 0Payload : VectorClock : [ 1 0 0 0  Type : APPLICATION
-Merged clock : VectorClock : [ 1 1 0 0  
-Received message :Id : 0Payload : VectorClock : [ 5 0 0 0  Type : APPLICATION
-Merged clock : VectorClock : [ 5 2 0 0  
-Received message :Id : 0Payload : VectorClock : [ 7 0 0 0  Type : APPLICATION
-Merged clock : VectorClock : [ 7 3 0 0  
-Received message :Id : 3Payload : VectorClock : [ 6 0 7 4  Type : APPLICATION
-Merged clock : VectorClock : [ 7 4 7 4  
-Received message :Id : 2Payload : VectorClock : [ 6 0 10 6  Type : APPLICATION
-Merged clock : VectorClock : [ 7 5 10 6  
-Received message :Id : 3Payload : VectorClock : [ 6 0 8 7  Type : APPLICATION
-Merged clock : VectorClock : [ 7 6 10 7  
-Received message :Id : 0Payload : VectorClock : [ 13 0 16 11  Type : APPLICATION
-Merged clock : VectorClock : [ 13 7 16 11  
-Sent message to 3
-SentMessageCount : 1
-Received message :Id : 2Payload : VectorClock : [ 13 8 19 13  Type : APPLICATION
-Merged clock : VectorClock : [ 13 9 19 13  
-Sent message to 3
-SentMessageCount : 2
-Sent message to 0
-SentMessageCount : 3
-Received message :Id : 2Payload : VectorClock : [ 15 10 23 16  Type : APPLICATION
-Merged clock : VectorClock : [ 15 12 23 16  
-Received message :Id : 3Payload : VectorClock : [ 17 11 21 19  Type : APPLICATION
-Merged clock : VectorClock : [ 17 13 23 19  
-Sent message to 2
-SentMessageCount : 4
-Received message :Id : 3Payload : VectorClock : [ 17 11 21 20  Type : APPLICATION
-Merged clock : VectorClock : [ 17 16 23 20  
-Sent message to 2
-SentMessageCount : 5
-Sent message to 3
-SentMessageCount : 6
-Received message :Id : 0Payload : VectorClock : [ 20 16 27 22  Type : APPLICATION
-Merged clock : VectorClock : [ 20 18 27 22  
-Received message :Id : 2Payload : VectorClock : [ 17 16 28 20  Type : APPLICATION
-Merged clock : VectorClock : [ 20 19 28 22  
-Sent message to 0
-SentMessageCount : 7
-Received message :Id : 0Payload : VectorClock : [ 21 16 27 22  Type : APPLICATION
-Merged clock : VectorClock : [ 21 21 28 22  
-Sent message to 3
-SentMessageCount : 8
-Sent message to 0
-SentMessageCount : 9
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 2... IGNORE
+Received ignored reply from 2
+Marker msg received from 3... IGNORE
+Received ignored reply from 3
+Received expected number of replies
+Send snapshot reply to 0
+Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0] Type : LOCAL_STATE
+Active - true
+Sent message to 0 SentMessageCount : 1
+Sent message to 0 SentMessageCount : 2
+Sent message to 3 SentMessageCount : 3
+Sent message to 3 SentMessageCount : 4
+Sent message to 3 SentMessageCount : 5
+Sent message to 2 SentMessageCount : 6
+Sent message to 0 SentMessageCount : 7
+Sent message to 3 SentMessageCount : 8
+Turning passive...
+Sent message to 2 SentMessageCount : 9
+Sent message to 0 SentMessageCount : 10
+Sent message to 3 SentMessageCount : 11
+Sent message to 2 SentMessageCount : 12
+Sent message to 3 SentMessageCount : 13
+Sent message to 2 SentMessageCount : 14
+Sent message to 2 SentMessageCount : 15
+MaxNumber message reached.
+Turning passive...
+Stopping sender thread.
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 2... IGNORE
+Marker msg received from 3... IGNORE
+Received ignored reply from 2
+Received ignored reply from 3
+Received expected number of replies
+Send snapshot reply to 0
+Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 24 23 26 17 ] SentMsgCount : 15 ReceivedMsgCount : 8] Type : LOCAL_STATE
+Marker msg received from 2... BROADCAST
+Expecting replies = 2
+Marker msg received from 0... IGNORE
+Marker msg received from 3... IGNORE
+Received ignored reply from 0
+Received ignored reply from 3
+Received expected number of replies
+Send snapshot reply to 2
+Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 24 24 30 18 ] SentMsgCount : 15 ReceivedMsgCount : 9] Type : LOCAL_STATE

@@ -3,15 +3,18 @@ import java.io.Serializable;
 
 public class Payload implements Serializable {
 
+    private int id;
     private int[] vectorClock;
     private boolean isActive;
-    private int sentMsgCount;
-    private int receivedMsgCount;
+    private int sentMsgCount = -1;
+    private int receivedMsgCount = -1;
 
-    public Payload(final int[] vectorClock,
+    public Payload(final int id,
+            final int[] vectorClock,
             final boolean isActive,
             final int sentMsgCount,
             final int receivedMsgCount) {
+        this.id = id;
         this.vectorClock = new int[vectorClock.length];
         System.arraycopy(vectorClock, 0, this.vectorClock, 0, vectorClock.length);
         this.isActive = isActive;
@@ -46,11 +49,13 @@ public class Payload implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("VectorClock : [ ");
+        StringBuilder builder = new StringBuilder("Id : " + id + " VectorClock : [ ");
         for(int i = 0; i < vectorClock.length; i++) {
             builder.append(vectorClock[i] + " ");
         }
-        builder.append("]");
+        builder.append("]")
+               .append(" SentMsgCount : " + sentMsgCount)
+               .append(" ReceivedMsgCount : " + receivedMsgCount);
         return builder.toString();
     }
 

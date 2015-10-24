@@ -11,7 +11,6 @@ import java.util.Random;
 public class MessageSender implements Runnable {
 
     private static final ArrayList<Integer> NEIGHBORS = AppConfigurations.getNeighborNodes();
-    private static final int CLUSTER_SIZE = Globals.clusterSize;
     private static final int MIN_PER_ACTIVE = Globals.minPerActive;
     private static final int MAX_PER_ACTIVE = Globals.maxPerActive;
     private static final int DIFF = MAX_PER_ACTIVE - MIN_PER_ACTIVE;
@@ -37,9 +36,10 @@ public class MessageSender implements Runnable {
             int numOfMsg = RANDOM_GENERATOR.nextInt(DIFF) + MIN_PER_ACTIVE;
             sendRandomMessages(numOfMsg);
 
+            Globals.log("Turning passive...");
             Globals.setNodeActive(false);
 
-            if (Globals.sentMessageCount >= Globals.maxNumber) {
+            if (Globals.getSentMessageCount() >= Globals.maxNumber) {
                 Globals.log("Stopping sender thread.");
                 break;
             }
@@ -57,9 +57,11 @@ public class MessageSender implements Runnable {
             Message message = null;
             synchronized (Globals.vectorClock) {
                 Globals.vectorClock[ID]++;
-                Payload p = new Payload(Globals.vectorClock);
-                message = new Message(Globals.id, p, MessageType.APPLICATION);
             }
+                Payload p = new Payload(Globals.getGlobalVectorClock());
+                ArrayList<Payload> payloads = new ArrayList<>();
+                payloads.add(p);
+                message = new Message(Globals.id, payloads, MessageType.APPLICATION);
 
             try {
                 synchronized (outputStream) {
@@ -67,9 +69,9 @@ public class MessageSender implements Runnable {
                 }
                 Globals.incrementSentMessageCount();
 
-                Globals.log("Sent message to " + nextNodeId);
-                Globals.log("SentMessageCount : " + Globals.sentMessageCount);
-                if (Globals.sentMessageCount >= Globals.maxNumber) {
+                Globals.log("Sent message to " + nextNodeId
+                            + " SentMessageCount : " + Globals.getSentMessageCount());
+                if (Globals.getSentMessageCount() >= Globals.maxNumber) {
                     Globals.log("MaxNumber message reached.");
                     break;
                 }
@@ -87,11 +89,10 @@ public class MessageSender implements Runnable {
     }
 
     private int selectRandomNeighbor() {
+        int size = NEIGHBORS.size();
         while(true) {
-            int random = RANDOM_GENERATOR.nextInt(CLUSTER_SIZE);
-            if(NEIGHBORS.contains(random)) {
-                return random;
-            }
+            int random = RANDOM_GENERATOR.nextInt(100) % size;
+            return NEIGHBORS.get(random);
         }
     }
 }

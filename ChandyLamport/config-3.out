@@ -6,62 +6,42 @@ NodeMap : {0=localhost:3332
 , 2=localhost:5231
 , 3=localhost:3342
 }
-Connected : 2
-Connected : 1
 Connected : 0
-Received message :Id : 2Payload : VectorClock : [ 6 0 5 0  Type : APPLICATION
-Merged clock : VectorClock : [ 6 0 5 1  
-Sent message to 2
-SentMessageCount : 1
-Received message :Id : 2Payload : VectorClock : [ 6 0 7 2  Type : APPLICATION
-Merged clock : VectorClock : [ 6 0 7 3  
-Sent message to 1
-SentMessageCount : 2
-Received message :Id : 2Payload : VectorClock : [ 6 0 8 2  Type : APPLICATION
-Merged clock : VectorClock : [ 6 0 8 5  
-Sent message to 2
-SentMessageCount : 3
-Sent message to 1
-SentMessageCount : 4
-Received message :Id : 2Payload : VectorClock : [ 6 0 11 6  Type : APPLICATION
-Merged clock : VectorClock : [ 6 0 11 8  
-Sent message to 2
-SentMessageCount : 5
-Sent message to 2
-SentMessageCount : 6
-Sent message to 0
-SentMessageCount : 7
-Received message :Id : 1Payload : VectorClock : [ 13 8 16 11  Type : APPLICATION
-Merged clock : VectorClock : [ 13 8 16 12  
-Sent message to 2
-SentMessageCount : 8
-Received message :Id : 1Payload : VectorClock : [ 13 10 19 13  Type : APPLICATION
-Merged clock : VectorClock : [ 13 10 19 14  
-Received message :Id : 0Payload : VectorClock : [ 14 0 16 11  Type : APPLICATION
-Merged clock : VectorClock : [ 14 10 19 15  
-Sent message to 2
-SentMessageCount : 9
-Received message :Id : 2Payload : VectorClock : [ 14 10 21 16  Type : APPLICATION
-Merged clock : VectorClock : [ 14 10 21 17  
-Received message :Id : 0Payload : VectorClock : [ 17 11 19 13  Type : APPLICATION
-Merged clock : VectorClock : [ 17 11 21 18  
-Sent message to 1
-SentMessageCount : 10
-Sent message to 1
-SentMessageCount : 11
-Received message :Id : 2Payload : VectorClock : [ 17 16 27 20  Type : APPLICATION
-Merged clock : VectorClock : [ 17 16 27 21  
-Sent message to 0
-SentMessageCount : 12
-Received message :Id : 1Payload : VectorClock : [ 17 17 23 20  Type : APPLICATION
-Merged clock : VectorClock : [ 17 17 27 23  
-Sent message to 2
-SentMessageCount : 13
-Received message :Id : 1Payload : VectorClock : [ 21 22 28 22  Type : APPLICATION
-Merged clock : VectorClock : [ 21 22 28 25  
-Sent message to 2
-SentMessageCount : 14
-Sent message to 2
-SentMessageCount : 15
-MaxNumber message reached.
-Stopping sender thread.
+Connected : 1
+Connected : 2
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 1... IGNORE
+Marker msg received from 2... IGNORE
+Received ignored reply from 2
+Received ignored reply from 1
+Received expected number of replies
+Send snapshot reply to 0
+Message==> Id : 3 Payload : [Id : 3 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0] Type : LOCAL_STATE
+Active - true
+Sent message to 0 SentMessageCount : 1
+Sent message to 2 SentMessageCount : 2
+Sent message to 1 SentMessageCount : 3
+Sent message to 2 SentMessageCount : 4
+Sent message to 2 SentMessageCount : 5
+Sent message to 0 SentMessageCount : 6
+Sent message to 0 SentMessageCount : 7
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 1... IGNORE
+Marker msg received from 2... IGNORE
+Received ignored reply from 2
+Received ignored reply from 1
+Received expected number of replies
+Send snapshot reply to 0
+Message==> Id : 3 Payload : [Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13] Type : LOCAL_STATE
+Turning passive...
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 1... IGNORE
+Received ignored reply from 1
+Marker msg received from 2... IGNORE
+Received ignored reply from 2
+Received expected number of replies
+Send snapshot reply to 0
+Message==> Id : 3 Payload : [Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13] Type : LOCAL_STATE

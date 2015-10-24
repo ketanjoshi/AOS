@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -10,12 +11,27 @@ public class Globals {
 
     public static final Random RANDOM = new Random();
 
+    /**
+     * Snapshot related globals
+     */
     public static boolean markerMsgReceived = false;
-    public static Boolean isActive = false;
-    public static Integer sentMessageCount = 0;
-    public static Integer receivedMessageCount = 0;
+    public static boolean allSnapshotReplyReceived = false;
+    public static int receivedSnapshotReplies = 0;
+    public static int markerSenderNode;
+    public static int markersReceivedSoFar = 0;
 
+    /**
+     * Application message related globals
+     */
+    public static boolean isActive = false;
+    public static int sentMessageCount = 0;
+    public static int receivedMessageCount = 0;
+
+    /**
+     * Environment globals
+     */
     public static int id;
+    public static int neighborCount;
     public static int clusterSize;
     public static int minPerActive;
     public static int maxPerActive;
@@ -23,6 +39,8 @@ public class Globals {
     public static long minSendDelay;
     public static long snapshotDelay;
     public static int[] vectorClock;
+
+    public static ArrayList<Payload> payloads = new ArrayList<>();
 
     private static FileWriter logger = null;
 
@@ -69,12 +87,12 @@ public class Globals {
         return sentMessageCount;
     }
 
-    public static synchronized int getReceivedMessageCount() {
-        return receivedMessageCount;
-    }
-
     public static synchronized void incrementSentMessageCount() {
         sentMessageCount++;
+    }
+
+    public static synchronized int getReceivedMessageCount() {
+        return receivedMessageCount;
     }
 
     public static synchronized void incrementReceivedMessageCount() {
@@ -90,6 +108,12 @@ public class Globals {
     }
 
     public static synchronized boolean isMarkerMsgReceived() {
+        if(!markerMsgReceived) {
+            if((markersReceivedSoFar % neighborCount) == 1) {
+                markerMsgReceived = true;
+            }
+            return false;
+        }
         return markerMsgReceived;
     }
 
@@ -97,4 +121,54 @@ public class Globals {
         markerMsgReceived = markerReceived;
     }
 
+    public static synchronized boolean isAllSnapshotReplyReceived() {
+        return allSnapshotReplyReceived;
+    }
+
+    public static synchronized void setAllSnapshotReplyReceived(boolean allSnapshotReceived) {
+        allSnapshotReplyReceived = allSnapshotReceived;
+    }
+
+    public static synchronized int getMarkerSenderNode() {
+        return markerSenderNode;
+    }
+
+    public static synchronized void setMarkerSenderNode(int markerSender) {
+        markerSenderNode = markerSender;
+    }
+
+    public static synchronized int getReceivedSnapshotReplies() {
+        return receivedSnapshotReplies;
+    }
+
+    public static synchronized void incrementReceivedSnapshotReplies() {
+        receivedSnapshotReplies++;
+    }
+
+    public static synchronized int getMarkersReceivedSoFar() {
+        return markersReceivedSoFar;
+    }
+
+    public static synchronized void incrementMarkersReceivedSoFar() {
+        markersReceivedSoFar++;
+    }
+
+    public static synchronized ArrayList<Payload> getPayloads() {
+        return payloads;
+    }
+
+    public static synchronized void addPayloads(ArrayList<Payload> payload) {
+        payloads.addAll(payload);
+    }
+
+    public static synchronized void addPayload(Payload payload) {
+        payloads.add(payload);
+    }
+
+    public static synchronized void resetSnapshotVariables() {
+        payloads.clear();
+        receivedSnapshotReplies = 0;
+        allSnapshotReplyReceived = false;
+        markerMsgReceived = id == 0;
+    }
 }

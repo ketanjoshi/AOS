@@ -15,55 +15,62 @@ Connected successfully : 2
 Trying to connect 3 - localhost:3342
 
 Connected successfully : 3
-Sent message to 1
-SentMessageCount : 1
-Sent message to 2
-SentMessageCount : 2
-Sent message to 2
-SentMessageCount : 3
-Sent message to 2
-SentMessageCount : 4
-Sent message to 1
-SentMessageCount : 5
-Sent message to 2
-SentMessageCount : 6
-Sent message to 1
-SentMessageCount : 7
-Received message :Id : 2Payload : VectorClock : [ 6 0 13 9  Type : APPLICATION
-Merged clock : VectorClock : [ 8 0 13 9  
-Sent message to 2
-SentMessageCount : 8
-Sent message to 2
-SentMessageCount : 9
-Received message :Id : 2Payload : VectorClock : [ 9 0 16 10  Type : APPLICATION
-Merged clock : VectorClock : [ 11 0 16 10  
-Received message :Id : 3Payload : VectorClock : [ 6 0 11 11  Type : APPLICATION
-Merged clock : VectorClock : [ 12 0 16 11  
-Sent message to 1
-SentMessageCount : 10
-Sent message to 3
-SentMessageCount : 11
-Sent message to 2
-SentMessageCount : 12
-Received message :Id : 1Payload : VectorClock : [ 13 11 19 13  Type : APPLICATION
-Merged clock : VectorClock : [ 16 11 19 13  
-Sent message to 3
-SentMessageCount : 13
-Received message :Id : 2Payload : VectorClock : [ 17 14 25 19  Type : APPLICATION
-Merged clock : VectorClock : [ 18 14 25 19  
-Received message :Id : 3Payload : VectorClock : [ 17 16 27 22  Type : APPLICATION
-Merged clock : VectorClock : [ 19 16 27 22  
-Sent message to 1
-SentMessageCount : 14
-Received message :Id : 1Payload : VectorClock : [ 20 20 28 22  Type : APPLICATION
-Merged clock : VectorClock : [ 22 20 28 22  
-Sent message to 1
-SentMessageCount : 15
+Active - true
+Initiating snapshot...
+Sent message to 2 SentMessageCount : 1
+Sent message to 1 SentMessageCount : 2
+Adding received payload => [Id : 2 VectorClock : [ 1 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1]
+Adding received payload => [Id : 3 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0]
+Adding received payload => [Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0]
+Received expected number of replies
+--------------Snapshot---------------
+Id : 2 VectorClock : [ 1 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1
+Id : 3 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0
+Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0
+Id : 0 VectorClock : [ 2 0 0 0 ] SentMsgCount : 2 ReceivedMsgCount : 0
+-------------------------------------
+Sleeping snapshot initiator... 2000
+Sent message to 2 SentMessageCount : 3
+Sent message to 2 SentMessageCount : 4
+Sent message to 2 SentMessageCount : 5
+Sent message to 2 SentMessageCount : 6
+Turning passive...
+Sent message to 1 SentMessageCount : 7
+Sent message to 1 SentMessageCount : 8
+Sent message to 2 SentMessageCount : 9
+Sent message to 1 SentMessageCount : 10
+Sent message to 2 SentMessageCount : 11
+Sent message to 2 SentMessageCount : 12
+Turning passive...
+Sent message to 3 SentMessageCount : 13
+Sent message to 3 SentMessageCount : 14
+Sent message to 1 SentMessageCount : 15
 MaxNumber message reached.
+Turning passive...
 Stopping sender thread.
-Received message :Id : 2Payload : VectorClock : [ 17 17 30 24  Type : APPLICATION
-Merged clock : VectorClock : [ 23 20 30 24  
-Received message :Id : 2Payload : VectorClock : [ 21 22 33 27  Type : APPLICATION
-Merged clock : VectorClock : [ 24 22 33 27  
-Received message :Id : 1Payload : VectorClock : [ 21 23 28 22  Type : APPLICATION
-Merged clock : VectorClock : [ 25 23 33 27  
+Initiating snapshot...
+Adding received payload => [Id : 1 VectorClock : [ 24 23 26 17 ] SentMsgCount : 15 ReceivedMsgCount : 8]
+Adding received payload => [Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13]
+Adding received payload => [Id : 2 VectorClock : [ 24 22 29 18 ] SentMsgCount : 13 ReceivedMsgCount : 16]
+Received expected number of replies
+Received expected number of replies
+--------------Snapshot---------------
+Id : 1 VectorClock : [ 24 23 26 17 ] SentMsgCount : 15 ReceivedMsgCount : 8
+Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13
+Id : 2 VectorClock : [ 24 22 29 18 ] SentMsgCount : 13 ReceivedMsgCount : 16
+Id : 0 VectorClock : [ 28 22 29 20 ] SentMsgCount : 15 ReceivedMsgCount : 13
+-------------------------------------
+Sleeping snapshot initiator... 2000
+Initiating snapshot...
+Marker msg received from 1... IGNORE
+Received ignored reply from 1
+Adding received payload => [Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13]
+Adding received payload => [Id : 1 VectorClock : [ 24 24 30 18 ] SentMsgCount : 15 ReceivedMsgCount : 9, Id : 2 VectorClock : [ 24 22 30 18 ] SentMsgCount : 14 ReceivedMsgCount : 16]
+Received expected number of replies
+--------------Snapshot---------------
+Id : 3 VectorClock : [ 22 19 23 20 ] SentMsgCount : 7 ReceivedMsgCount : 13
+Id : 1 VectorClock : [ 24 24 30 18 ] SentMsgCount : 15 ReceivedMsgCount : 9
+Id : 2 VectorClock : [ 24 22 30 18 ] SentMsgCount : 14 ReceivedMsgCount : 16
+Id : 0 VectorClock : [ 28 22 29 20 ] SentMsgCount : 15 ReceivedMsgCount : 13
+-------------------------------------
+Sleeping snapshot initiator... 2000

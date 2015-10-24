@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class ClusterNode {
@@ -105,7 +106,7 @@ public class ClusterNode {
         ArrayList<Thread> receiverThreadPool = new ArrayList<>();
         for (Integer neighborId : neighbors) {
             ObjectInputStream stream = NetworkComponents.getReaderStream(neighborId);
-            MessageReceiver receiver = new MessageReceiver(stream);
+            MessageReceiver receiver = new MessageReceiver(stream, neighbors);
             Thread thread = new Thread(receiver);
             thread.start();
             receiverThreadPool.add(thread);
@@ -139,12 +140,16 @@ public class ClusterNode {
             cNode.establishConnections();
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
+
+//            Globals.setNodeActive(id % 2 == 0);
+            Globals.setNodeActive(true);
+            Globals.log("Active - " + Globals.isNodeActive());
+
+//            Thread.sleep(WAIT_TIME);
             Thread snapshotThread = null;
             if(id == 0) {
                 snapshotThread = cNode.launchSnapshotInitiator();
             }
-
-            Globals.isActive = id % 2 == 0;
 
             senderThread.join();
             for (Thread thread : receiverThreads) {
@@ -169,7 +174,7 @@ public class ClusterNode {
     }
 
     private Thread launchSnapshotInitiator() {
-        SnapshotInitiator snapshotInitiator = new SnapshotInitiator();
+        SnapshotInitiator snapshotInitiator = new SnapshotInitiator(neighbors);
         Thread thread = new Thread(snapshotInitiator);
         thread.start();
         return thread;

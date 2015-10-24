@@ -103,6 +103,7 @@ public class AppConfigurations {
                 lineNumber++;
             }
             neighborNodes = neighbors;
+            Globals.neighborCount = neighbors.size();
 
         } catch (IOException e) {
             e.printStackTrace();
