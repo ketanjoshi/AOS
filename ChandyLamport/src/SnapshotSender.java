@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 
+/**
+ * Thread to send given snapshot message to a given neighbor
+ * @author ketan
+ */
 public class SnapshotSender implements Runnable {
 
     private final int nodeId;

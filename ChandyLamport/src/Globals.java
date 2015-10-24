@@ -107,6 +107,11 @@ public class Globals {
         isActive = isNodeActive;
     }
 
+    /**
+     * Returns a boolean if valid marker message is received.
+     * If any stale marker message is received then it should return false.
+     * @return true if valid marker message received, else false
+     */
     public static synchronized boolean isMarkerMsgReceived() {
         if(!markerMsgReceived) {
             if((markersReceivedSoFar % neighborCount) == 1) {
@@ -165,6 +170,9 @@ public class Globals {
         payloads.add(payload);
     }
 
+    /**
+     * Resets all the variables used for snapshot capturing
+     */
     public static synchronized void resetSnapshotVariables() {
         payloads.clear();
         receivedSnapshotReplies = 0;

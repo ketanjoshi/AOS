@@ -34,10 +34,16 @@ public class ClusterNode {
         listenerSocket = new ServerSocket(nodeInfo.getPortNumber());
     }
 
+    /**
+     * Establish connection with the neighbors and adds entries for 
+     * connection sockets, input streams and output streams in global maps
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void establishConnections() throws InterruptedException, IOException {
         // Launch listener thread
         // Connect to all the neighbors with nodeId > own id
-        Listener listener = new Listener(id, listenerSocket, neighbors);
+        Listener listener = new Listener(listenerSocket, neighbors);
         Thread listenerThread = new Thread(listener);
         listenerThread.start();
 
@@ -64,6 +70,12 @@ public class ClusterNode {
         listenerThread.interrupt();
     }
 
+    /**
+     * Requests socket connection to the input neighbors and adds entries to global maps
+     * @param nodeId - Neighbor node id to connect to
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     private void addToNetworkComponents(int nodeId) throws UnknownHostException, IOException {
         NodeInfo info = nodeMap.get(nodeId);
 
@@ -101,6 +113,11 @@ public class ClusterNode {
                 + "\nNodeMap : " + nodeMap;
     }
 
+    /**
+     * Launches and returns thread handle to message receiver thread
+     * @return {@link Thread}
+     * @throws InterruptedException
+     */
     private ArrayList<Thread> launchReceiverThreads() throws InterruptedException {
         // Launch receiver threads
         ArrayList<Thread> receiverThreadPool = new ArrayList<>();
@@ -116,6 +133,10 @@ public class ClusterNode {
 
     }
 
+    /**
+     * Launches and returns thread handle to message sender thread
+     * @return {@link Thread}
+     */
     private Thread launchSenderThread() {
         // Launch sender thread
         MessageSender sender = new MessageSender();
@@ -141,15 +162,10 @@ public class ClusterNode {
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
 
-//            Globals.setNodeActive(id % 2 == 0);
-            Globals.setNodeActive(true);
+            Globals.setNodeActive(id % 2 == 0);
             Globals.log("Active - " + Globals.isNodeActive());
 
-//            Thread.sleep(WAIT_TIME);
-            Thread snapshotThread = null;
-            if(id == 0) {
-                snapshotThread = cNode.launchSnapshotInitiator();
-            }
+            Thread snapshotThread = cNode.launchSnapshotInitiator();
 
             senderThread.join();
             for (Thread thread : receiverThreads) {
@@ -159,9 +175,6 @@ public class ClusterNode {
                 snapshotThread.join();
             }
 
-            /**
-             *  TODO : Make MAP protocol working
-             */
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
             e.printStackTrace();
@@ -173,7 +186,14 @@ public class ClusterNode {
         System.exit(0);
     }
 
+    /**
+     * Launches and returns thread handle to snapshot capturing thread
+     * @return {@link Thread}
+     */
     private Thread launchSnapshotInitiator() {
+        if (!isInitiator) {
+            return null;
+        }
         SnapshotInitiator snapshotInitiator = new SnapshotInitiator(neighbors);
         Thread thread = new Thread(snapshotInitiator);
         thread.start();

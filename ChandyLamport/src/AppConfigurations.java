@@ -143,7 +143,7 @@ public class AppConfigurations {
         return String.format("%s-%s.out", 
                 fileName.substring(0, fileName.lastIndexOf('.')), nodeId);
     }
-    
+
     public static ArrayList<Integer> getNeighborNodes() {
         return neighborNodes;
     }

@@ -33,7 +33,6 @@ public class MessageReceiver implements Runnable {
         while(isRunning) {
             try {
                 Message message = (Message) inputStream.readObject();
-//                Globals.log("Message received : " + message.toString());
                 MessageType type = message.getType();
                 if (type.equals(MessageType.APPLICATION)) {
                     handleApplicationMessage(message);
@@ -46,6 +45,7 @@ public class MessageReceiver implements Runnable {
                     // Exit
                 }
                 else {
+                    // LOCAL_STATE or IGNORED message
                     handleSnapshotReplyMessage(message);
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -54,25 +54,31 @@ public class MessageReceiver implements Runnable {
         }
     }
 
+    /**
+     * <pre>Processes incoming snapshot reply message
+     * If type LOCAL_STATE - Adds received payload to the global payload list
+     * If type IGNORED - ignore the message
+     * When all the expected replies are received,
+     * send the consolidated payload to the node from which it received the marker message<pre>
+     * @param message {@link Message}
+     */
     private void handleSnapshotReplyMessage(Message message) {
         // Increment received reply count
         Globals.incrementReceivedSnapshotReplies();
-//        Globals.log("Snapshot reply received from : " + message.getId()
-//                + "\nReplies received so far = " + Globals.getReceivedSnapshotReplies());
 
         if(message.getType().equals(MessageType.IGNORED)) {
-            Globals.log("Received ignored reply from " + message.getId());
+            Globals.log("Received IGNORED reply from " + message.getId());
             // Do nothing
         }
         else {
             // LOCAL_STATE type
             Globals.addPayloads(message.getPayload());
-            Globals.log("Adding received payload => " + message.getPayload());
+            Globals.log("Received LOCAL_STATE reply from " + message.getId() 
+                    + "Adding received payload => " + message.getPayload());
         }
         // Check if all expected replies are received
         if(Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) {
-            Globals.log("Received expected number of replies");
-         // Send consolidated local state
+            // Add own local state to the received local state list
             Payload myPayload = new Payload(ID, Globals.getGlobalVectorClock(),
                     Globals.isNodeActive(), Globals.getSentMessageCount(),
                     Globals.getReceivedMessageCount());
@@ -83,6 +89,8 @@ public class MessageReceiver implements Runnable {
                 Globals.setAllSnapshotReplyReceived(true);
             }
             else {
+                // Send consolidated local state reply
+                Globals.log("Received expected number of replies, send cumulative local states");
                 ArrayList<Payload> snapshotPayload = new ArrayList<>();
                 snapshotPayload.addAll(Globals.getPayloads());
 
@@ -100,13 +108,19 @@ public class MessageReceiver implements Runnable {
         }
     }
 
+    /**
+     * <pre>Processes incoming application message
+     * Merge the piggybacked vector clock from the message 
+     * and become active if node satisfies predefined criteria<pre>
+     * @param message {@link Message}
+     */
     private void handleApplicationMessage(Message message) {
         // Application message
         Globals.incrementReceivedMessageCount();
         mergeVectorClocks(message);
 
-//        Globals.log("Received message : " + message 
-//                + "\nMerged clock : " + Globals.getPrintableGlobalClock());
+        Globals.log("Received application message : " + message 
+                + "\nMerged clock : " + Globals.getPrintableGlobalClock());
 
         if (Globals.isNodeActive()) {
             // Already active, ignore the message
@@ -121,6 +135,11 @@ public class MessageReceiver implements Runnable {
         Globals.setNodeActive(true);
     }
 
+    /**
+     * Processes incoming marker message
+     * If it is a valid marker message, broadcast it to other neighbors, else discard
+     * @param message {@link Message}
+     */
     private void handleMarkerMessage(Message message) {
         Globals.incrementMarkersReceivedSoFar();
 
@@ -146,6 +165,10 @@ public class MessageReceiver implements Runnable {
         }
     }
 
+    /**
+     * Merge the incoming message's piggybacked vector clock into own global clock
+     * @param message {@link Message}
+     */
     private void mergeVectorClocks(Message message) {
         int[] piggybackVectorClock = message.getPayload().get(0).getVectorClock();
         synchronized (Globals.vectorClock) {
@@ -159,6 +182,12 @@ public class MessageReceiver implements Runnable {
         }
     }
 
+    /**
+     * Launch {@link SnapshotSender} thread and wait for it to finish.
+     * It sends given snapshot reply message to given node.
+     * @param id - neighbor node id
+     * @param message {@link Message}
+     */
     private void launchSnapshotSender(int id, Message message) {
         SnapshotSender snapshotSender = new SnapshotSender(id, message);
         Thread thread = new Thread(snapshotSender);
@@ -166,7 +195,6 @@ public class MessageReceiver implements Runnable {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

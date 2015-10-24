@@ -1,7 +1,16 @@
 import java.io.Serializable;
 
 
+/**
+ * Captures the local state of particular node
+ * @author ketan
+ */
 public class Payload implements Serializable {
+
+    /**
+     * Default serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private int[] vectorClock;

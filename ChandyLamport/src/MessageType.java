@@ -1,6 +1,10 @@
 import java.io.Serializable;
 
 
+/**
+ * Types of messages used in the system
+ * @author ketan
+ */
 public enum MessageType implements Serializable {
 
     // For application messages, piggybacked vector clocks

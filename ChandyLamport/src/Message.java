@@ -2,8 +2,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
+/**
+ * Represents the message sent and received between nodes
+ * @author ketan
+ */
 public class Message implements Serializable {
 
+    /**
+     * Default serialVersionUID
+     */
     private static final long serialVersionUID = 1L;
 
     private final int id;

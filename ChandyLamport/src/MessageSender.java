@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Sender thread to send a token on a given output stream.
+ * Sender thread to send a message randomly 
+ * on any output stream when the node is active
  * @author ketan
  */
 public class MessageSender implements Runnable {
@@ -46,7 +47,12 @@ public class MessageSender implements Runnable {
         }
 
     }
-    
+
+    /**
+     * Randomly selects a neighbor and sends application message to it.
+     * Stops the execution if total sent messages reach the maximum limit.
+     * @param numOfMsg - number of messages
+     */
     private void sendRandomMessages(int numOfMsg) {
         for (int i = 0; i < numOfMsg; i++) {
 
@@ -88,6 +94,10 @@ public class MessageSender implements Runnable {
         }
     }
 
+    /**
+     * Returns a randomly chosen neighbor id
+     * @return - neighbor node id
+     */
     private int selectRandomNeighbor() {
         int size = NEIGHBORS.size();
         while(true) {

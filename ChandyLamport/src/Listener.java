@@ -14,19 +14,16 @@ import java.util.ArrayList;
 public class Listener implements Runnable {
 
     public volatile boolean isRunning = true;
-    private final int id;
     private final ServerSocket listenerSocket;
     private final ArrayList<Integer> neighbors;
 
     private int connector;
 
     public Listener(
-            final int id,
             final ServerSocket listenerSocket,
             final ArrayList<Integer> neighbors
             ) {
 
-        this.id = id;
         this.listenerSocket = listenerSocket;
         this.neighbors = neighbors;
     }

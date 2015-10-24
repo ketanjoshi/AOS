@@ -1,11 +1,13 @@
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
 public class SnapshotInitiator implements Runnable {
 
     private static final long SNAPSHOT_DELAY = Globals.snapshotDelay;
+
     private final ArrayList<Integer> neighbors;
+
+    public volatile boolean isRunning = true;
 
     public SnapshotInitiator(final ArrayList<Integer> neighbors) {
         this.neighbors = neighbors;
@@ -22,7 +24,6 @@ public class SnapshotInitiator implements Runnable {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
@@ -32,44 +33,37 @@ public class SnapshotInitiator implements Runnable {
     @Override
     public void run() {
 
-//        while (true) {
-        for(int i = 0; i < 3; i++) {
+        while (isRunning) {
 
             initiateSnapshotProcess();
 
             while (!Globals.isAllSnapshotReplyReceived()) {
                 // Continue to wait till all replies received
-//                try {
-//                    Thread.sleep(SNAPSHOT_DELAY);
-//                } catch (InterruptedException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
             }
 
             ArrayList<Payload> replyPayloadList = new ArrayList<>();
             replyPayloadList.addAll(Globals.getPayloads());
 
-            StringBuilder sb = new StringBuilder("--------------Snapshot---------------\n");
+            StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");
             for (Payload p : replyPayloadList) {
-                sb.append(p.toString() + "\n");
+                builder.append(p.toString() + "\n");
             }
-            sb.append("-------------------------------------");
-            Globals.log(sb.toString());
+            builder.append("-------------------------------------");
+            Globals.log(builder.toString());
 
             // Reset snapshot variables
             Globals.resetSnapshotVariables();
 
-            // All replies received, check if system has terminated
-
-
-
             /**
-             *  If system not yet terminated, sleep for constant time
-            */
+             * TODO: Check if state is strongly consistent => system has terminated.
+             *       If yes, send FINISH messages and terminate.
+             */
+            checkSystemTermination();
 
+
+            // If system not yet terminated, sleep for constant time
             try {
-                Globals.log("Sleeping snapshot initiator... " + SNAPSHOT_DELAY);
+                Globals.log("Snapshot process sleeping... " + SNAPSHOT_DELAY);
                 Thread.sleep(SNAPSHOT_DELAY);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -77,6 +71,11 @@ public class SnapshotInitiator implements Runnable {
             }
 
         }
+    }
+
+    private boolean checkSystemTermination() {
+        isStronglyConsistentSnapshot();
+        return false;
     }
 
     private boolean isStronglyConsistentSnapshot() {
