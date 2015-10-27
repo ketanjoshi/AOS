@@ -36,6 +36,10 @@ public class Payload implements Serializable {
         System.arraycopy(vectorClock, 0, this.vectorClock, 0, vectorClock.length);
     }
 
+    public int getId() {
+        return id;
+    }
+
     public int[] getVectorClock() {
         return vectorClock;
     }

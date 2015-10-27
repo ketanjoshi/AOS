@@ -1,9 +1,24 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 
 public class SnapshotInitiator implements Runnable {
 
+    private static class PayloadComparator implements Comparator<Payload> {
+
+        public PayloadComparator() {
+        }
+
+        @Override
+        public int compare(Payload p1, Payload p2) {
+            return p1.getId() - p2.getId();
+        }
+
+    }
+
     private static final long SNAPSHOT_DELAY = Globals.snapshotDelay;
+    private static final PayloadComparator PAYLOAD_COMPARATOR = new PayloadComparator();
 
     private final ArrayList<Integer> neighbors;
 
@@ -41,7 +56,7 @@ public class SnapshotInitiator implements Runnable {
                 // Continue to wait till all replies received
             }
 
-            ArrayList<Payload> replyPayloadList = new ArrayList<>();
+            TreeSet<Payload> replyPayloadList = new TreeSet<>(PAYLOAD_COMPARATOR);
             replyPayloadList.addAll(Globals.getPayloads());
 
             StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");

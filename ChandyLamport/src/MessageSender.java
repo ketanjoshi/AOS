@@ -42,7 +42,7 @@ public class MessageSender implements Runnable {
 
             if (Globals.getSentMessageCount() >= Globals.maxNumber) {
                 Globals.log("Stopping sender thread.");
-                break;
+                isRunning = false;
             }
         }
 
@@ -64,10 +64,10 @@ public class MessageSender implements Runnable {
             synchronized (Globals.vectorClock) {
                 Globals.vectorClock[ID]++;
             }
-                Payload p = new Payload(Globals.getGlobalVectorClock());
-                ArrayList<Payload> payloads = new ArrayList<>();
-                payloads.add(p);
-                message = new Message(Globals.id, payloads, MessageType.APPLICATION);
+            Payload p = new Payload(Globals.getGlobalVectorClock());
+            ArrayList<Payload> payloads = new ArrayList<>();
+            payloads.add(p);
+            message = new Message(Globals.id, payloads, MessageType.APPLICATION);
 
             try {
                 synchronized (outputStream) {
@@ -79,6 +79,7 @@ public class MessageSender implements Runnable {
                             + " SentMessageCount : " + Globals.getSentMessageCount());
                 if (Globals.getSentMessageCount() >= Globals.maxNumber) {
                     Globals.log("MaxNumber message reached.");
+                    isRunning = false;
                     break;
                 }
             } catch (IOException e) {

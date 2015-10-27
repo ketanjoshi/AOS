@@ -74,7 +74,7 @@ public class MessageReceiver implements Runnable {
             // LOCAL_STATE type
             Globals.addPayloads(message.getPayload());
             Globals.log("Received LOCAL_STATE reply from " + message.getId() 
-                    + "Adding received payload => " + message.getPayload());
+                    + " ==> Received payload : " + message.getPayload());
         }
         // Check if all expected replies are received
         if(Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) {
@@ -98,7 +98,7 @@ public class MessageReceiver implements Runnable {
                         MessageType.LOCAL_STATE);
                 int markerSenderNode = Globals.getMarkerSenderNode();
                 Globals.log("Send snapshot reply to " + markerSenderNode 
-                        + "\nMessage==> " + replyStateMsg);
+                        + " ==> Message : " + replyStateMsg);
                 launchSnapshotSender(markerSenderNode, replyStateMsg);
 
                 // Reset all counter variables
