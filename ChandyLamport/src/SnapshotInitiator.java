@@ -36,12 +36,6 @@ public class SnapshotInitiator implements Runnable {
             SnapshotSender snapshotSender = new SnapshotSender(neighborId, snapshotMessage);
             Thread thread = new Thread(snapshotSender);
             thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
         }
     }
 
@@ -66,15 +60,18 @@ public class SnapshotInitiator implements Runnable {
             builder.append("-------------------------------------");
             Globals.log(builder.toString());
 
+            if (isSystemTerminated(replyPayloadList)) {
+                Globals.log("********************System terminated...");
+                /**
+                 * TODO: Send FINISH messages and terminate.
+                 */
+            }
+            else {
+                Globals.log("********************NOT terminated...");
+            }
+
             // Reset snapshot variables
             Globals.resetSnapshotVariables();
-
-            /**
-             * TODO: Check if state is strongly consistent => system has terminated.
-             *       If yes, send FINISH messages and terminate.
-             */
-            checkSystemTermination();
-
 
             // If system not yet terminated, sleep for constant time
             try {
@@ -88,13 +85,25 @@ public class SnapshotInitiator implements Runnable {
         }
     }
 
-    private boolean checkSystemTermination() {
-        isStronglyConsistentSnapshot();
-        return false;
+    private boolean isSystemTerminated(TreeSet<Payload> payloads) {
+        return isAllPassive(payloads) && isChannelsEmpty(payloads);
     }
 
-    private boolean isStronglyConsistentSnapshot() {
-        return false;
+    private boolean isAllPassive(TreeSet<Payload> payloads) {
+        boolean isAnyActive = false;
+        for (Payload payload : payloads) {
+            isAnyActive |= payload.isActive();
+        }
+        return !isAnyActive;
+    }
+
+    private boolean isChannelsEmpty(TreeSet<Payload> payloads) {
+        int totalSentCount = 0, totalReceiveCount = 0;
+        for (Payload payload : payloads) {
+            totalReceiveCount += payload.getReceivedMsgCount();
+            totalSentCount += payload.getSentMsgCount();
+        }
+        return totalReceiveCount - totalSentCount == 0;
     }
 
 }

@@ -19,6 +19,7 @@ public class Globals {
     public static int receivedSnapshotReplies = 0;
     public static int markerSenderNode;
     public static int markersReceivedSoFar = 0;
+    public static boolean repliedToSnapshot = false;
 
     /**
      * Application message related globals
@@ -122,6 +123,14 @@ public class Globals {
         return markerMsgReceived;
     }
 
+    public static synchronized boolean isRepliedToSnapshot() {
+        if (!repliedToSnapshot) {
+            repliedToSnapshot = true;
+            return false;
+        }
+        return repliedToSnapshot;
+    }
+
     public static synchronized void setMarkerMsgReceived(boolean markerReceived) {
         markerMsgReceived = markerReceived;
     }
@@ -178,5 +187,6 @@ public class Globals {
         receivedSnapshotReplies = 0;
         allSnapshotReplyReceived = false;
         markerMsgReceived = id == 0;
+        repliedToSnapshot = false;
     }
 }

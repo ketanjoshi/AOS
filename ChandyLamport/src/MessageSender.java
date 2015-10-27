@@ -19,6 +19,7 @@ public class MessageSender implements Runnable {
     private static final HashMap<Integer, ObjectOutputStream> OUTPUTSTREAM_MAP = NetworkComponents.writerStreamMap;
     private static final Random RANDOM_GENERATOR = Globals.RANDOM;
     private static final int ID = Globals.id;
+    private static final int CLUSTER_SIZE = Globals.clusterSize;
 
     public static volatile boolean isRunning = true;
 
@@ -35,7 +36,7 @@ public class MessageSender implements Runnable {
             }
 
             int numOfMsg = RANDOM_GENERATOR.nextInt(DIFF) + MIN_PER_ACTIVE;
-            sendRandomMessages(numOfMsg);
+            sendApplicationMessages(numOfMsg);
 
             Globals.log("Turning passive...");
             Globals.setNodeActive(false);
@@ -53,7 +54,7 @@ public class MessageSender implements Runnable {
      * Stops the execution if total sent messages reach the maximum limit.
      * @param numOfMsg - number of messages
      */
-    private void sendRandomMessages(int numOfMsg) {
+    private void sendApplicationMessages(int numOfMsg) {
         for (int i = 0; i < numOfMsg; i++) {
 
             int nextNodeId = selectRandomNeighbor();
@@ -61,13 +62,15 @@ public class MessageSender implements Runnable {
             // Send to this random node
             ObjectOutputStream outputStream = OUTPUTSTREAM_MAP.get(nextNodeId);
             Message message = null;
+            int[] localClock = new int[CLUSTER_SIZE];
             synchronized (Globals.vectorClock) {
                 Globals.vectorClock[ID]++;
+                System.arraycopy(Globals.vectorClock, 0, localClock, 0, CLUSTER_SIZE);
             }
-            Payload p = new Payload(Globals.getGlobalVectorClock());
+            Payload p = new Payload(localClock);
             ArrayList<Payload> payloads = new ArrayList<>();
             payloads.add(p);
-            message = new Message(Globals.id, payloads, MessageType.APPLICATION);
+            message = new Message(ID, payloads, MessageType.APPLICATION);
 
             try {
                 synchronized (outputStream) {

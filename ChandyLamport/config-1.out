@@ -15,48 +15,100 @@ Trying to connect 3 - localhost:3342
 Connected successfully : 3
 Marker msg received from 0... BROADCAST
 Expecting replies = 2
-Marker msg received from 2... IGNORE
-Received ignored reply from 2
 Marker msg received from 3... IGNORE
-Received ignored reply from 3
-Received expected number of replies
-Send snapshot reply to 0
-Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0] Type : LOCAL_STATE
-Active - true
-Sent message to 0 SentMessageCount : 1
-Sent message to 0 SentMessageCount : 2
-Sent message to 3 SentMessageCount : 3
-Sent message to 3 SentMessageCount : 4
-Sent message to 3 SentMessageCount : 5
+Received IGNORED reply from 3
+Marker msg received from 3... IGNORE
+Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5, Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1]
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5, Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1, Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0] Type : LOCAL_STATE
+Active - false
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 2... IGNORE
+Received IGNORED reply from 2
+Marker msg received from 3... IGNORE
+Received IGNORED reply from 3
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0] Type : LOCAL_STATE
+Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 3 0 2 0 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 3 1 2 0 ]
+Becoming active...
+Sent message to 3 SentMessageCount : 1
+Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 6 2 4 7 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 6 3 4 7 ]
+Already active...
+Sent message to 2 SentMessageCount : 2
+Received application message : Id : 0 Payload : [Id : 0 VectorClock : [ 8 2 2 8 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 8 5 4 8 ]
+Already active...
+Sent message to 0 SentMessageCount : 3
+Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 6 2 2 9 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 8 7 4 9 ]
+Already active...
+Sent message to 2 SentMessageCount : 4
+Received application message : Id : 0 Payload : [Id : 0 VectorClock : [ 13 6 7 8 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 13 9 7 9 ]
+Already active...
+Sent message to 0 SentMessageCount : 5
+Received application message : Id : 0 Payload : [Id : 0 VectorClock : [ 19 10 9 12 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 19 11 9 12 ]
+Already active...
 Sent message to 2 SentMessageCount : 6
 Sent message to 0 SentMessageCount : 7
-Sent message to 3 SentMessageCount : 8
 Turning passive...
+Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 28 13 17 25 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 14 17 25 ]
+Becoming active...
+Sent message to 0 SentMessageCount : 8
+Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 28 13 15 26 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 16 17 26 ]
+Already active...
 Sent message to 2 SentMessageCount : 9
-Sent message to 0 SentMessageCount : 10
-Sent message to 3 SentMessageCount : 11
+Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 28 17 20 26 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 19 20 26 ]
+Already active...
+Sent message to 3 SentMessageCount : 10
+Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 28 13 15 27 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 20 20 27 ]
+Already active...
+Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 28 17 21 26 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 21 21 27 ]
+Already active...
+Sent message to 0 SentMessageCount : 11
+Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 28 18 17 29 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
+Merged clock : VectorClock : [ 28 23 21 29 ]
+Already active...
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Marker msg received from 3... IGNORE
+Received IGNORED reply from 3
+Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 2 VectorClock : [ 28 17 21 26 ] SentMsgCount : 12 ReceivedMsgCount : 9]
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 2 VectorClock : [ 28 17 21 26 ] SentMsgCount : 12 ReceivedMsgCount : 9, Id : 1 VectorClock : [ 28 23 21 29 ] SentMsgCount : 11 ReceivedMsgCount : 12] Type : LOCAL_STATE
 Sent message to 2 SentMessageCount : 12
-Sent message to 3 SentMessageCount : 13
-Sent message to 2 SentMessageCount : 14
+Sent message to 0 SentMessageCount : 13
+Sent message to 3 SentMessageCount : 14
 Sent message to 2 SentMessageCount : 15
 MaxNumber message reached.
 Turning passive...
 Stopping sender thread.
 Marker msg received from 0... BROADCAST
 Expecting replies = 2
-Marker msg received from 2... IGNORE
-Marker msg received from 3... IGNORE
-Received ignored reply from 2
-Received ignored reply from 3
-Received expected number of replies
-Send snapshot reply to 0
-Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 24 23 26 17 ] SentMsgCount : 15 ReceivedMsgCount : 8] Type : LOCAL_STATE
-Marker msg received from 2... BROADCAST
+Received LOCAL_STATE reply from 3 ==> Received payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18]
+Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12]
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12] Type : LOCAL_STATE
+Marker msg received from 0... BROADCAST
 Expecting replies = 2
-Marker msg received from 0... IGNORE
-Marker msg received from 3... IGNORE
-Received ignored reply from 0
-Received ignored reply from 3
-Received expected number of replies
-Send snapshot reply to 2
-Message==> Id : 1 Payload : [Id : 1 VectorClock : [ 24 24 30 18 ] SentMsgCount : 15 ReceivedMsgCount : 9] Type : LOCAL_STATE
+Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12]
+Received LOCAL_STATE reply from 3 ==> Received payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18]
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12] Type : LOCAL_STATE
+Marker msg received from 0... BROADCAST
+Expecting replies = 2
+Received LOCAL_STATE reply from 3 ==> Received payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18]
+Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12]
+Received expected number of replies, send cumulative local states
+Send snapshot reply to 0 ==> Message : Id : 1 Payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12] Type : LOCAL_STATE
+Marker msg received from 0... BROADCAST
+Expecting replies = 2

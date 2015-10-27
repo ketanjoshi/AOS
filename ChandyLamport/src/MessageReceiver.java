@@ -77,9 +77,14 @@ public class MessageReceiver implements Runnable {
                     + " ==> Received payload : " + message.getPayload());
         }
         // Check if all expected replies are received
-        if(Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) {
+        if((Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) 
+                && !Globals.isRepliedToSnapshot()) {
             // Add own local state to the received local state list
-            Payload myPayload = new Payload(ID, Globals.getGlobalVectorClock(),
+            int[] localClock = new int[CLUSTER_SIZE];
+            synchronized (Globals.vectorClock) {
+                System.arraycopy(Globals.vectorClock, 0, localClock, 0, CLUSTER_SIZE);
+            }
+            Payload myPayload = new Payload(ID, localClock,
                     Globals.isNodeActive(), Globals.getSentMessageCount(),
                     Globals.getReceivedMessageCount());
             Globals.addPayload(myPayload);
@@ -124,14 +129,17 @@ public class MessageReceiver implements Runnable {
 
         if (Globals.isNodeActive()) {
             // Already active, ignore the message
+            Globals.log("Already active...");
             return;
         }
         if (Globals.getSentMessageCount() >= Globals.maxNumber) {
             // Cannot become active, so ignore
+            Globals.log("Reached max send limit... cannot become active");
             return;
         }
 
         // Can become active
+        Globals.log("Becoming active...");
         Globals.setNodeActive(true);
     }
 
@@ -173,12 +181,9 @@ public class MessageReceiver implements Runnable {
         int[] piggybackVectorClock = message.getPayload().get(0).getVectorClock();
         synchronized (Globals.vectorClock) {
             for (int i = 0; i < CLUSTER_SIZE; i++) {
-                if (i == ID) {
-                    Globals.vectorClock[i]++;
-                }
-                Globals.vectorClock[i] = Math.max(Globals.vectorClock[i],
-                        piggybackVectorClock[i]);
+                Globals.vectorClock[i] = Math.max(Globals.vectorClock[i], piggybackVectorClock[i]);
             }
+            Globals.vectorClock[ID]++;
         }
     }
 
