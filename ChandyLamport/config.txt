@@ -1,4 +1,4 @@
-# six global parameters (see above)
+# six global parameters (clusterSize minPerActive maxPerActive minSendDelay snapshotDelay maxNumber)
 4 6 10 100 2000 15
 
 # nodeID hostName listen Port
@@ -6,10 +6,9 @@
 1 localhost 5678
 2 localhost 5231
 3 localhost 3342
-#4 localhost 5688
+
 
 1		# space delimited list of neighbors for node 0
 2 3		# space delimited list of neighbors for node 1
 0 1 3	# space delimited list of neighbors for node 2
 0		# space delimited list of neighbors for node 3
-#1 3		# space delimited list of neighbors for node 4
