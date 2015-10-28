@@ -169,6 +169,7 @@ public class ClusterNode {
             while(!Globals.isSystemTerminated()) {
 //                Thread.sleep(WAIT_TIME);
             }
+            Thread.sleep(WAIT_TIME);
             System.exit(0);
 
 //            senderThread.join();

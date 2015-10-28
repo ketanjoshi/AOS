@@ -20,6 +20,7 @@ public class TerminationDetector implements Runnable {
     private static final long SNAPSHOT_DELAY = Globals.snapshotDelay;
     private static final PayloadComparator PAYLOAD_COMPARATOR = new PayloadComparator();
     private static final int ID = Globals.id;
+    private static final int CLUSTER_SIZE = Globals.clusterSize;
 
     private final ArrayList<Integer> neighbors;
 
@@ -30,12 +31,23 @@ public class TerminationDetector implements Runnable {
     }
 
     public void sendMarkerMessages() {
-//        Globals.log("Initiating snapshot...");
+        Globals.log("Initiating snapshot...");
+        // Add own local state to the received local state list
+        int[] localClock = new int[CLUSTER_SIZE];
+        synchronized (Globals.vectorClock) {
+            System.arraycopy(Globals.vectorClock, 0, localClock, 0, CLUSTER_SIZE);
+        }
+
+        Payload myPayload = new Payload(ID, localClock,
+                Globals.isNodeActive(), Globals.getSentMessageCount(),
+                Globals.getReceivedMessageCount());
+        Globals.log(myPayload.toString());
+        Globals.addPayload(myPayload);
         broadcastMessage(MessageType.MARKER);
     }
 
     private void sendFinishMessages() {
-//        Globals.log("Sending finish messages...");
+        Globals.log("Sending finish messages...");
         broadcastMessage(MessageType.FINISH);
     }
 
@@ -45,12 +57,12 @@ public class TerminationDetector implements Runnable {
             SnapshotSender snapshotSender = new SnapshotSender(neighborId, snapshotMessage);
             Thread thread = new Thread(snapshotSender);
             thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
+//            try {
+//                thread.join();
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -68,21 +80,21 @@ public class TerminationDetector implements Runnable {
             TreeSet<Payload> replyPayloadList = new TreeSet<>(PAYLOAD_COMPARATOR);
             replyPayloadList.addAll(Globals.getPayloads());
 
-//            StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");
-//            for (Payload p : replyPayloadList) {
-//                builder.append(p.toString() + "\n");
-//            }
-//            builder.append("-------------------------------------");
-//            Globals.log(builder.toString());
+            StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");
+            for (Payload p : replyPayloadList) {
+                builder.append(p.toString() + "\n");
+            }
+            builder.append("-------------------------------------");
+            Globals.log(builder.toString());
 
             if (isSystemTerminated(replyPayloadList)) {
-//                Globals.log("********************System terminated...");
+                Globals.log("********************System terminated...");
                 sendFinishMessages();
                 Globals.setIsSystemTerminated(true);
                 break;
             }
             else {
-//                Globals.log("********************NOT terminated...");
+                Globals.log("********************NOT terminated...");
             }
 
             // Reset snapshot variables
@@ -90,7 +102,7 @@ public class TerminationDetector implements Runnable {
 
             // If system not yet terminated, sleep for constant time
             try {
-//                Globals.log("Snapshot process sleeping... " + SNAPSHOT_DELAY);
+                Globals.log("Snapshot process sleeping... " + SNAPSHOT_DELAY);
                 Thread.sleep(SNAPSHOT_DELAY);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

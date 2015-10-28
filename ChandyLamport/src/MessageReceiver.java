@@ -54,6 +54,13 @@ public class MessageReceiver implements Runnable {
     }
 
     private void handleFinishMessage(Message message) {
+        // Send finish message to neighbors and wait for response
+        Message broadcastMarkerMsg = new Message(ID, null, MessageType.FINISH);
+        for (Integer neighborId : neighbors) {
+            if (neighborId != message.getId()) {
+                launchSnapshotSender(neighborId, broadcastMarkerMsg);
+            }
+        }
         Globals.setIsSystemTerminated(true);
         isRunning = false;
     }
@@ -71,29 +78,18 @@ public class MessageReceiver implements Runnable {
         Globals.incrementReceivedSnapshotReplies();
 
         if(message.getType().equals(MessageType.IGNORED)) {
-//            Globals.log("Received IGNORED reply from " + message.getId());
+            Globals.log("Received IGNORED reply from " + message.getId());
             // Do nothing
         }
         else {
             // LOCAL_STATE type
             Globals.addPayloads(message.getPayload());
-//            Globals.log("Received LOCAL_STATE reply from " + message.getId() 
-//                    + " ==> Received payload : " + message.getPayload());
+            Globals.log("Received LOCAL_STATE reply from " + message.getId() 
+                    + " ==> Received payload : " + message.getPayload());
         }
         // Check if all expected replies are received
         if((Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) 
                 && !Globals.isRepliedToSnapshot()) {
-            // Add own local state to the received local state list
-            int[] localClock = new int[CLUSTER_SIZE];
-            synchronized (Globals.vectorClock) {
-                System.arraycopy(Globals.vectorClock, 0, localClock, 0, CLUSTER_SIZE);
-            }
-
-            Payload myPayload = new Payload(ID, localClock,
-                    Globals.isNodeActive(), Globals.getSentMessageCount(),
-                    Globals.getReceivedMessageCount());
-            Globals.log(myPayload.toString());
-            Globals.addPayload(myPayload);
 
             // If node ID = 0, then set all replies received as true
             if (ID == 0) {
@@ -101,15 +97,15 @@ public class MessageReceiver implements Runnable {
             }
             else {
                 // Send consolidated local state reply
-//                Globals.log("Received expected number of replies, send cumulative local states");
+                Globals.log("Received expected number of replies, send cumulative local states");
                 ArrayList<Payload> snapshotPayload = new ArrayList<>();
                 snapshotPayload.addAll(Globals.getPayloads());
 
                 Message replyStateMsg = new Message(ID, snapshotPayload,
                         MessageType.LOCAL_STATE);
                 int markerSenderNode = Globals.getMarkerSenderNode();
-//                Globals.log("Send snapshot reply to " + markerSenderNode 
-//                        + " ==> Message : " + replyStateMsg);
+                Globals.log("Send snapshot reply to " + markerSenderNode 
+                        + " ==> Message : " + replyStateMsg);
                 launchSnapshotSender(markerSenderNode, replyStateMsg);
 
                 // Reset all counter variables
@@ -135,17 +131,17 @@ public class MessageReceiver implements Runnable {
 
         if (Globals.isNodeActive()) {
             // Already active, ignore the message
-//            Globals.log("Already active...");
+            Globals.log("Already active...");
             return;
         }
         if (Globals.getSentMessageCount() >= Globals.maxNumber) {
             // Cannot become active, so ignore
-//            Globals.log("Reached max send limit... cannot become active");
+            Globals.log("Reached max send limit... cannot become active");
             return;
         }
 
         // Can become active
-//        Globals.log("Becoming active...");
+        Globals.log("Becoming active...");
         Globals.setNodeActive(true);
     }
 
@@ -160,15 +156,27 @@ public class MessageReceiver implements Runnable {
         // Record state and send
         if (Globals.isMarkerMsgReceived() || ID == 0) {
             // Send ignore message
-//            Globals.log("Marker msg received from " + message.getId() + "... IGNORE");
+            Globals.log("Marker msg received from " + message.getId() + "... IGNORE");
             Message replyMessage =  new Message(ID, null, MessageType.IGNORED);
             launchSnapshotSender(message.getId(), replyMessage);
         }
         else {
+            // Add own local state to the received local state list
             Globals.setMarkerMsgReceived(true);
+            int[] localClock = new int[CLUSTER_SIZE];
+            synchronized (Globals.vectorClock) {
+                System.arraycopy(Globals.vectorClock, 0, localClock, 0, CLUSTER_SIZE);
+            }
+
+            Payload myPayload = new Payload(ID, localClock,
+                    Globals.isNodeActive(), Globals.getSentMessageCount(),
+                    Globals.getReceivedMessageCount());
+            Globals.log("Recording state : " + myPayload.toString());
+            Globals.addPayload(myPayload);
+
             Globals.setMarkerSenderNode(message.getId());
-//            Globals.log("Marker msg received from " + message.getId() + "... BROADCAST\n"
-//                    + "Expecting replies = " + expectedSnapshotReplies);
+            Globals.log("Marker msg received from " + message.getId() + "... BROADCAST\n"
+                    + "Expecting replies = " + expectedSnapshotReplies);
             // Send marker message to neighbors and wait for response
             Message broadcastMarkerMsg = new Message(ID, null, MessageType.MARKER);
             for (Integer neighborId : neighbors) {
@@ -203,10 +211,10 @@ public class MessageReceiver implements Runnable {
         SnapshotSender snapshotSender = new SnapshotSender(id, message);
         Thread thread = new Thread(snapshotSender);
         thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 }

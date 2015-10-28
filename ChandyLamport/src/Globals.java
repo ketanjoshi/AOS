@@ -196,6 +196,7 @@ public class Globals {
      */
     public static synchronized void resetSnapshotVariables() {
         payloads.clear();
+        payloads = new ArrayList<>();
         receivedSnapshotReplies = 0;
         allSnapshotReplyReceived = false;
         markerMsgReceived = id == 0;
