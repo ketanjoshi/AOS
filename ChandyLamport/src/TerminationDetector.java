@@ -3,7 +3,7 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 
-public class SnapshotInitiator implements Runnable {
+public class TerminationDetector implements Runnable {
 
     private static class PayloadComparator implements Comparator<Payload> {
 
@@ -19,23 +19,38 @@ public class SnapshotInitiator implements Runnable {
 
     private static final long SNAPSHOT_DELAY = Globals.snapshotDelay;
     private static final PayloadComparator PAYLOAD_COMPARATOR = new PayloadComparator();
+    private static final int ID = Globals.id;
 
     private final ArrayList<Integer> neighbors;
 
     public volatile boolean isRunning = true;
 
-    public SnapshotInitiator(final ArrayList<Integer> neighbors) {
+    public TerminationDetector(final ArrayList<Integer> neighbors) {
         this.neighbors = neighbors;
     }
 
-    public void initiateSnapshotProcess() {
-        Globals.log("Initiating snapshot...");
-        Globals.setMarkerMsgReceived(true);
-        Message snapshotMessage = new Message(Globals.id, null, MessageType.MARKER);
+    public void sendMarkerMessages() {
+//        Globals.log("Initiating snapshot...");
+        broadcastMessage(MessageType.MARKER);
+    }
+
+    private void sendFinishMessages() {
+//        Globals.log("Sending finish messages...");
+        broadcastMessage(MessageType.FINISH);
+    }
+
+    private void broadcastMessage(MessageType type) {
+        Message snapshotMessage = new Message(ID, null, type);
         for (Integer neighborId : neighbors) {
             SnapshotSender snapshotSender = new SnapshotSender(neighborId, snapshotMessage);
             Thread thread = new Thread(snapshotSender);
             thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
         }
     }
 
@@ -44,7 +59,7 @@ public class SnapshotInitiator implements Runnable {
 
         while (isRunning) {
 
-            initiateSnapshotProcess();
+            sendMarkerMessages();
 
             while (!Globals.isAllSnapshotReplyReceived()) {
                 // Continue to wait till all replies received
@@ -53,21 +68,21 @@ public class SnapshotInitiator implements Runnable {
             TreeSet<Payload> replyPayloadList = new TreeSet<>(PAYLOAD_COMPARATOR);
             replyPayloadList.addAll(Globals.getPayloads());
 
-            StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");
-            for (Payload p : replyPayloadList) {
-                builder.append(p.toString() + "\n");
-            }
-            builder.append("-------------------------------------");
-            Globals.log(builder.toString());
+//            StringBuilder builder = new StringBuilder("--------------Snapshot---------------\n");
+//            for (Payload p : replyPayloadList) {
+//                builder.append(p.toString() + "\n");
+//            }
+//            builder.append("-------------------------------------");
+//            Globals.log(builder.toString());
 
             if (isSystemTerminated(replyPayloadList)) {
-                Globals.log("********************System terminated...");
-                /**
-                 * TODO: Send FINISH messages and terminate.
-                 */
+//                Globals.log("********************System terminated...");
+                sendFinishMessages();
+                Globals.setIsSystemTerminated(true);
+                break;
             }
             else {
-                Globals.log("********************NOT terminated...");
+//                Globals.log("********************NOT terminated...");
             }
 
             // Reset snapshot variables
@@ -75,7 +90,7 @@ public class SnapshotInitiator implements Runnable {
 
             // If system not yet terminated, sleep for constant time
             try {
-                Globals.log("Snapshot process sleeping... " + SNAPSHOT_DELAY);
+//                Globals.log("Snapshot process sleeping... " + SNAPSHOT_DELAY);
                 Thread.sleep(SNAPSHOT_DELAY);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

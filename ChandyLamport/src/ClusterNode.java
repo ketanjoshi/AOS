@@ -62,7 +62,7 @@ public class ClusterNode {
         }
 
         while (NetworkComponents.getSocketMapSize() < neighbors.size()) {
-            System.out.println(NetworkComponents.getSocketMapSize() + " Waiting... " + neighbors.size());
+//            System.out.println(NetworkComponents.getSocketMapSize() + " Waiting... " + neighbors.size());
             Thread.sleep(WAIT_TIME);
         }
 
@@ -78,7 +78,7 @@ public class ClusterNode {
     private void addToNetworkComponents(int nodeId) throws UnknownHostException, IOException {
         NodeInfo info = nodeMap.get(nodeId);
 
-        Globals.log("Trying to connect " + nodeId + " - " + info);
+//        Globals.log("Trying to connect " + nodeId + " - " + info);
         boolean connected = false;
         Socket sock = null;
         while (!connected) {
@@ -86,10 +86,10 @@ public class ClusterNode {
                 sock = new Socket(info.getHostName(), info.getPortNumber());
                 connected = true;
             } catch (ConnectException ce) {
-                Globals.log("Consuming ConnectException... Retrying...");
+//                Globals.log("Consuming ConnectException... Retrying...");
             }
         }
-        Globals.log("Connected successfully : " + nodeId);
+//        Globals.log("Connected successfully : " + nodeId);
 
         NetworkComponents.addSocketEntry(nodeId, sock);
 
@@ -155,24 +155,29 @@ public class ClusterNode {
         ClusterNode cNode = new ClusterNode();
         try {
             cNode.initializeNode(configFileName, id);
-            Globals.log(cNode.toString());
+//            Globals.log(cNode.toString());
 
             cNode.establishConnections();
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
 
             Globals.setNodeActive(id % 2 == 0);
-            Globals.log("Active - " + Globals.isNodeActive());
+//            Globals.log("Active - " + Globals.isNodeActive());
 
-            Thread snapshotThread = cNode.launchSnapshotInitiator();
+            Thread terminationDetectorThread = cNode.launchTerminationDetector();
 
-            senderThread.join();
-            for (Thread thread : receiverThreads) {
-                thread.join();
+            while(!Globals.isSystemTerminated()) {
+//                Thread.sleep(WAIT_TIME);
             }
-            if(snapshotThread != null) {
-                snapshotThread.join();
-            }
+            System.exit(0);
+
+//            senderThread.join();
+//            for (Thread thread : receiverThreads) {
+//                thread.join();
+//            }
+//            if(terminationDetectorThread != null) {
+//                terminationDetectorThread.join();
+//            }
 
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
@@ -189,11 +194,11 @@ public class ClusterNode {
      * Launches and returns thread handle to snapshot capturing thread
      * @return {@link Thread}
      */
-    private Thread launchSnapshotInitiator() {
+    private Thread launchTerminationDetector() {
         if (!isInitiator) {
             return null;
         }
-        SnapshotInitiator snapshotInitiator = new SnapshotInitiator(neighbors);
+        TerminationDetector snapshotInitiator = new TerminationDetector(neighbors);
         Thread thread = new Thread(snapshotInitiator);
         thread.start();
         return thread;

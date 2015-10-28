@@ -62,13 +62,15 @@ public class Payload implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("Id : " + id + " VectorClock : [ ");
-        for(int i = 0; i < vectorClock.length; i++) {
+//        StringBuilder builder = new StringBuilder("Id : " + id + " VectorClock : [ ");
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < vectorClock.length - 1; i++) {
             builder.append(vectorClock[i] + " ");
         }
-        builder.append("]")
-               .append(" SentMsgCount : " + sentMsgCount)
-               .append(" ReceivedMsgCount : " + receivedMsgCount);
+        builder.append(vectorClock[vectorClock.length - 1]);
+//        builder.append("]")
+//               .append(" SentMsgCount : " + sentMsgCount)
+//               .append(" ReceivedMsgCount : " + receivedMsgCount);
         return builder.toString();
     }
 

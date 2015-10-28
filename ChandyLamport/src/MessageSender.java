@@ -38,11 +38,11 @@ public class MessageSender implements Runnable {
             int numOfMsg = RANDOM_GENERATOR.nextInt(DIFF) + MIN_PER_ACTIVE;
             sendApplicationMessages(numOfMsg);
 
-            Globals.log("Turning passive...");
+//            Globals.log("Turning passive...");
             Globals.setNodeActive(false);
 
             if (Globals.getSentMessageCount() >= Globals.maxNumber) {
-                Globals.log("Stopping sender thread.");
+//                Globals.log("Stopping sender thread.");
                 isRunning = false;
             }
         }
@@ -78,10 +78,10 @@ public class MessageSender implements Runnable {
                 }
                 Globals.incrementSentMessageCount();
 
-                Globals.log("Sent message to " + nextNodeId
-                            + " SentMessageCount : " + Globals.getSentMessageCount());
+//                Globals.log("Sent message to " + nextNodeId
+//                            + " SentMessageCount : " + Globals.getSentMessageCount());
                 if (Globals.getSentMessageCount() >= Globals.maxNumber) {
-                    Globals.log("MaxNumber message reached.");
+//                    Globals.log("MaxNumber message reached.");
                     isRunning = false;
                     break;
                 }

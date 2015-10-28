@@ -11,6 +11,7 @@ public class Globals {
 
     public static final Random RANDOM = new Random();
 
+    public static int loggerCalls = 0;
     /**
      * Snapshot related globals
      */
@@ -20,6 +21,7 @@ public class Globals {
     public static int markerSenderNode;
     public static int markersReceivedSoFar = 0;
     public static boolean repliedToSnapshot = false;
+    public static boolean isSystemTerminated = false;
 
     /**
      * Application message related globals
@@ -62,8 +64,10 @@ public class Globals {
         }
 
         try {
-            logger.write(message + "\n");
+            String prependString = loggerCalls == 0 ? "" : "\n";
+            logger.write(prependString + message);
             logger.flush();
+            loggerCalls++;
         } catch (IOException e) {
             System.err.println("Problem while logging..."
                     + "Last log message : " + message);
@@ -141,6 +145,14 @@ public class Globals {
 
     public static synchronized void setAllSnapshotReplyReceived(boolean allSnapshotReceived) {
         allSnapshotReplyReceived = allSnapshotReceived;
+    }
+
+    public static synchronized boolean isSystemTerminated() {
+        return isSystemTerminated;
+    }
+
+    public static synchronized void setIsSystemTerminated(boolean systemTerminated) {
+        isSystemTerminated = systemTerminated;
     }
 
     public static synchronized int getMarkerSenderNode() {
