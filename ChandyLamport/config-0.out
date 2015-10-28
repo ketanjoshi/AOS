@@ -1,179 +1,58 @@
-NodeId : 0
-NodeInfo : localhost:3332
-Neighbors : [1, 2, 3]
-NodeMap : {0=localhost:3332
-, 1=localhost:5678
-, 2=localhost:5231
-, 3=localhost:3342
-}
-Trying to connect 1 - localhost:5678
-
-Connected successfully : 1
-Trying to connect 2 - localhost:5231
-
-Connected successfully : 2
-Trying to connect 3 - localhost:3342
-
-Connected successfully : 3
-Active - true
 Initiating snapshot...
-Sent message to 3 SentMessageCount : 1
-Sent message to 3 SentMessageCount : 2
-Sent message to 2 SentMessageCount : 3
-Sent message to 3 SentMessageCount : 4
-Sent message to 3 SentMessageCount : 5
-Sent message to 3 SentMessageCount : 6
-Turning passive...
-Marker msg received from 2... IGNORE
-Received IGNORED reply from 2
-Received LOCAL_STATE reply from 3 ==> Received payload : [Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5]
-Marker msg received from 3... IGNORE
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5, Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1, Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0]
+1 0 0 0
+Marker msg received from 1... IGNORE
+Received IGNORED reply from 1
+Received LOCAL_STATE reply from 2 ==> Received payload : [0 0 0 0]
+Received LOCAL_STATE reply from 3 ==> Received payload : [0 0 0 0, 0 0 0 0]
 --------------Snapshot---------------
-Id : 0 VectorClock : [ 6 0 0 0 ] SentMsgCount : 6 ReceivedMsgCount : 0
-Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0
-Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1
-Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5
+1 0 0 0
+0 0 0 0
+0 0 0 0
+0 0 0 0
 -------------------------------------
 ********************NOT terminated...
 Snapshot process sleeping... 2000
-Initiating snapshot...
-Marker msg received from 3... IGNORE
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0]
-Received IGNORED reply from 3
-Received LOCAL_STATE reply from 2 ==> Received payload : [Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5, Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1]
---------------Snapshot---------------
-Id : 0 VectorClock : [ 6 0 0 0 ] SentMsgCount : 6 ReceivedMsgCount : 0
-Id : 1 VectorClock : [ 0 0 0 0 ] SentMsgCount : 0 ReceivedMsgCount : 0
-Id : 2 VectorClock : [ 3 0 1 0 ] SentMsgCount : 0 ReceivedMsgCount : 1
-Id : 3 VectorClock : [ 6 0 0 5 ] SentMsgCount : 0 ReceivedMsgCount : 5
--------------------------------------
-********************NOT terminated...
-Snapshot process sleeping... 2000
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 6 2 2 8 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 7 2 2 8 ]
 Becoming active...
-Sent message to 1 SentMessageCount : 7
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 6 4 6 7 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 9 4 6 8 ]
-Already active...
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 8 6 4 8 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 10 6 6 8 ]
-Already active...
-Sent message to 3 SentMessageCount : 8
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 6 4 7 7 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 12 6 7 8 ]
-Already active...
-Sent message to 1 SentMessageCount : 9
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 11 6 6 11 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 14 6 7 11 ]
-Already active...
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 8 8 9 9 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 15 8 9 11 ]
-Already active...
-Sent message to 3 SentMessageCount : 10
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 11 6 6 12 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 17 8 9 12 ]
-Already active...
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 13 10 7 9 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 18 10 9 12 ]
-Already active...
-Sent message to 1 SentMessageCount : 11
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 19 12 13 15 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 20 12 13 15 ]
-Already active...
-Sent message to 3 SentMessageCount : 12
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 19 13 9 12 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 22 13 13 15 ]
-Already active...
-Sent message to 3 SentMessageCount : 13
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 21 12 15 19 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 24 13 15 19 ]
-Already active...
-Sent message to 3 SentMessageCount : 14
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 25 13 15 22 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 26 13 15 22 ]
-Already active...
-Turning passive...
-Received application message : Id : 3 Payload : [Id : 0 VectorClock : [ 25 13 15 23 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 27 13 15 23 ]
-Becoming active...
-Sent message to 3 SentMessageCount : 15
-MaxNumber message reached.
-Turning passive...
-Stopping sender thread.
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 28 15 17 25 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 29 15 17 25 ]
 Reached max send limit... cannot become active
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 28 13 18 25 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 30 15 18 25 ]
 Reached max send limit... cannot become active
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 28 22 21 27 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 31 22 21 27 ]
+Reached max send limit... cannot become active
 Reached max send limit... cannot become active
 Initiating snapshot...
-Marker msg received from 2... IGNORE
-Received IGNORED reply from 2
-Received LOCAL_STATE reply from 3 ==> Received payload : [Id : 3 VectorClock : [ 28 18 17 29 ] SentMsgCount : 14 ReceivedMsgCount : 15]
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 2 VectorClock : [ 28 17 21 26 ] SentMsgCount : 12 ReceivedMsgCount : 9, Id : 1 VectorClock : [ 28 23 21 29 ] SentMsgCount : 11 ReceivedMsgCount : 12]
+20 0 15 17
+Marker msg received from 3... IGNORE
+Received IGNORED reply from 3
+Reached max send limit... cannot become active
+Received LOCAL_STATE reply from 1 ==> Received payload : [16 9 18 18, 16 0 13 18]
+Received LOCAL_STATE reply from 2 ==> Received payload : [16 9 19 18]
 --------------Snapshot---------------
-Id : 0 VectorClock : [ 31 22 21 27 ] SentMsgCount : 15 ReceivedMsgCount : 16
-Id : 1 VectorClock : [ 28 23 21 29 ] SentMsgCount : 11 ReceivedMsgCount : 12
-Id : 2 VectorClock : [ 28 17 21 26 ] SentMsgCount : 12 ReceivedMsgCount : 9
-Id : 3 VectorClock : [ 28 18 17 29 ] SentMsgCount : 14 ReceivedMsgCount : 15
+20 0 15 17
+16 9 18 18
+16 9 19 18
+16 0 13 18
 -------------------------------------
 ********************NOT terminated...
 Snapshot process sleeping... 2000
-Received application message : Id : 2 Payload : [Id : 0 VectorClock : [ 28 24 25 30 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 32 24 25 30 ]
 Reached max send limit... cannot become active
-Received application message : Id : 1 Payload : [Id : 0 VectorClock : [ 28 25 21 29 ] SentMsgCount : -1 ReceivedMsgCount : -1] Type : APPLICATION
-Merged clock : VectorClock : [ 33 25 25 30 ]
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
+Reached max send limit... cannot become active
 Reached max send limit... cannot become active
 Initiating snapshot...
+30 20 27 30
+Marker msg received from 1... IGNORE
 Marker msg received from 3... IGNORE
-Marker msg received from 2... IGNORE
+Received IGNORED reply from 1
 Received IGNORED reply from 3
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12]
-Received IGNORED reply from 2
+Received LOCAL_STATE reply from 2 ==> Received payload : [16 19 28 25, 16 20 27 25, 16 20 27 30]
 --------------Snapshot---------------
-Id : 0 VectorClock : [ 33 25 25 30 ] SentMsgCount : 15 ReceivedMsgCount : 18
-Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18
+30 20 27 30
+16 20 27 25
+16 19 28 25
+16 20 27 30
 -------------------------------------
 ********************System terminated...
-Snapshot process sleeping... 2000
-Initiating snapshot...
-Marker msg received from 2... IGNORE
-Marker msg received from 3... IGNORE
-Received IGNORED reply from 2
-Received IGNORED reply from 3
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12]
---------------Snapshot---------------
-Id : 0 VectorClock : [ 33 25 25 30 ] SentMsgCount : 15 ReceivedMsgCount : 18
-Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18
--------------------------------------
-********************System terminated...
-Snapshot process sleeping... 2000
-Initiating snapshot...
-Marker msg received from 2... IGNORE
-Marker msg received from 3... IGNORE
-Received LOCAL_STATE reply from 1 ==> Received payload : [Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18, Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12, Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12]
-Received IGNORED reply from 2
-Received IGNORED reply from 3
---------------Snapshot---------------
-Id : 0 VectorClock : [ 33 25 25 30 ] SentMsgCount : 15 ReceivedMsgCount : 18
-Id : 1 VectorClock : [ 28 27 21 29 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 2 VectorClock : [ 28 27 27 30 ] SentMsgCount : 15 ReceivedMsgCount : 12
-Id : 3 VectorClock : [ 28 26 26 33 ] SentMsgCount : 15 ReceivedMsgCount : 18
--------------------------------------
-********************System terminated...
-Snapshot process sleeping... 2000
-Initiating snapshot...
-Marker msg received from 2... IGNORE
-Marker msg received from 3... IGNORE
-Received IGNORED reply from 3
-Received IGNORED reply from 2
+Sending finish messages...
