@@ -177,6 +177,23 @@ public class MessageReceiver implements Runnable {
             Globals.setMarkerSenderNode(message.getId());
             Globals.log("Marker msg received from " + message.getId() + "... BROADCAST\n"
                     + "Expecting replies = " + expectedSnapshotReplies);
+            if(expectedSnapshotReplies == 0) {
+                // Send consolidated local state reply
+                Globals.log("Received expected number of replies, send cumulative local states");
+                ArrayList<Payload> snapshotPayload = new ArrayList<>();
+                snapshotPayload.addAll(Globals.getPayloads());
+
+                Message replyStateMsg = new Message(ID, snapshotPayload,
+                        MessageType.LOCAL_STATE);
+                int markerSenderNode = Globals.getMarkerSenderNode();
+                Globals.log("Send snapshot reply to " + markerSenderNode 
+                        + " ==> Message : " + replyStateMsg);
+                launchSnapshotSender(markerSenderNode, replyStateMsg);
+
+                // Reset all counter variables
+                Globals.resetSnapshotVariables();
+                return;
+            }
             // Send marker message to neighbors and wait for response
             Message broadcastMarkerMsg = new Message(ID, null, MessageType.MARKER);
             for (Integer neighborId : neighbors) {

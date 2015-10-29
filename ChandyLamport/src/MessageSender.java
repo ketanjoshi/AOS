@@ -23,7 +23,6 @@ public class MessageSender implements Runnable {
 
     public static volatile boolean isRunning = true;
 
-
     public MessageSender() {
     }
 

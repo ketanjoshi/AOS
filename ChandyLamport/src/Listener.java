@@ -47,19 +47,19 @@ public class Listener implements Runnable {
                     ByteBuffer bytebuff = ByteBuffer.wrap(buff);
                     int nodeId = bytebuff.getInt();
                     connector = nodeId;
-//                    Globals.log("Connected : " + nodeId);
+                    Globals.log("Connected : " + nodeId);
 
                     NetworkComponents.addSocketEntry(nodeId, connectionSocket);
                     NetworkComponents.addInputStreamEntry(nodeId, ois);
                     NetworkComponents.addOutputStreamEntry(nodeId, new ObjectOutputStream(connectionSocket.getOutputStream()));
 
                 } catch (IOException e) {
-//                    Globals.log(connector + " - Listener : " + e.getMessage());
+                    Globals.log(connector + " - Listener : " + e.getMessage());
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-//            Globals.log(connector + " - Listener : " + e.getMessage());
+            Globals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
         }
         finally {

@@ -24,6 +24,7 @@ public class ClusterNode {
     public ClusterNode() {
     }
 
+
     public void initializeNode(String config, int nodeId) throws IOException {
         id = nodeId;
         isInitiator = nodeId == 0;
@@ -78,7 +79,7 @@ public class ClusterNode {
     private void addToNetworkComponents(int nodeId) throws UnknownHostException, IOException {
         NodeInfo info = nodeMap.get(nodeId);
 
-//        Globals.log("Trying to connect " + nodeId + " - " + info);
+        Globals.log("Trying to connect " + nodeId + " - " + info);
         boolean connected = false;
         Socket sock = null;
         while (!connected) {
@@ -86,10 +87,10 @@ public class ClusterNode {
                 sock = new Socket(info.getHostName(), info.getPortNumber());
                 connected = true;
             } catch (ConnectException ce) {
-//                Globals.log("Consuming ConnectException... Retrying...");
+                Globals.log("Consuming ConnectException... Retrying...");
             }
         }
-//        Globals.log("Connected successfully : " + nodeId);
+        Globals.log("Connected successfully : " + nodeId);
 
         NetworkComponents.addSocketEntry(nodeId, sock);
 
@@ -155,14 +156,13 @@ public class ClusterNode {
         ClusterNode cNode = new ClusterNode();
         try {
             cNode.initializeNode(configFileName, id);
-//            Globals.log(cNode.toString());
+            Globals.log(cNode.toString());
 
             cNode.establishConnections();
             ArrayList<Thread> receiverThreads = cNode.launchReceiverThreads();
             Thread senderThread = cNode.launchSenderThread();
 
             Globals.setNodeActive(id % 2 == 0);
-//            Globals.log("Active - " + Globals.isNodeActive());
 
             Thread terminationDetectorThread = cNode.launchTerminationDetector();
 

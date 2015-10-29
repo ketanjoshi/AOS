@@ -73,7 +73,7 @@ public class AppConfigurations {
 
             int lineNumber = 0;
             ArrayList<Integer> neighbors = new ArrayList<>();
-            while (scanner.hasNext()) {
+            while (input != null) {
                 lineScanner = new Scanner(input);
                 if (lineNumber != id) {
                     while (lineScanner.hasNext()) {
@@ -98,7 +98,8 @@ public class AppConfigurations {
                         }
                     }
                 }
-                input = scanner.nextLine();
+//                input = scanner.nextLine();
+                input = getNextValidInputLine(scanner);
                 lineScanner.close();
                 lineNumber++;
             }
