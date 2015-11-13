@@ -88,8 +88,7 @@ public class MessageReceiver implements Runnable {
                     + " ==> Received payload : " + message.getPayload());
         }
         // Check if all expected replies are received
-        if((Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies) 
-                && !Globals.isRepliedToSnapshot()) {
+        if((Globals.getReceivedSnapshotReplies() == expectedSnapshotReplies)) { 
 
             // If node ID = 0, then set all replies received as true
             if (ID == 0) {
@@ -108,8 +107,6 @@ public class MessageReceiver implements Runnable {
                         + " ==> Message : " + replyStateMsg);
                 launchSnapshotSender(markerSenderNode, replyStateMsg);
 
-                // Reset all counter variables
-                Globals.resetSnapshotVariables();
             }
 
         }
@@ -126,8 +123,8 @@ public class MessageReceiver implements Runnable {
         Globals.incrementReceivedMessageCount();
         mergeVectorClocks(message);
 
-//        Globals.log("Received application message : " + message 
-//                + "\nMerged clock : " + Globals.getPrintableGlobalClock());
+        Globals.log("Received application message : " + message 
+                + "\nMerged clock : " + Globals.getPrintableGlobalClock());
 
         if (Globals.isNodeActive()) {
             // Already active, ignore the message
@@ -153,8 +150,7 @@ public class MessageReceiver implements Runnable {
     private void handleMarkerMessage(Message message) {
         Globals.incrementMarkersReceivedSoFar();
 
-        // Record state and send
-        if (Globals.isMarkerMsgReceived() || ID == 0) {
+        if (Globals.markersReceived.contains(message.getMessageId()) || ID == 0) {
             // Send ignore message
             Globals.log("Marker msg received from " + message.getId() + "... IGNORE");
             Message replyMessage =  new Message(ID, null, MessageType.IGNORED);
@@ -162,6 +158,8 @@ public class MessageReceiver implements Runnable {
         }
         else {
             // Add own local state to the received local state list
+            Globals.markersReceived.add(message.getMessageId());
+            Globals.resetSnapshotVariables();
             Globals.setMarkerMsgReceived(true);
             int[] localClock = new int[CLUSTER_SIZE];
             synchronized (Globals.vectorClock) {
@@ -190,12 +188,10 @@ public class MessageReceiver implements Runnable {
                         + " ==> Message : " + replyStateMsg);
                 launchSnapshotSender(markerSenderNode, replyStateMsg);
 
-                // Reset all counter variables
-                Globals.resetSnapshotVariables();
                 return;
             }
             // Send marker message to neighbors and wait for response
-            Message broadcastMarkerMsg = new Message(ID, null, MessageType.MARKER);
+            Message broadcastMarkerMsg = new Message(ID, null, MessageType.MARKER, message.getMessageId());
             for (Integer neighborId : neighbors) {
                 if (neighborId != message.getId()) {
                     launchSnapshotSender(neighborId, broadcastMarkerMsg);
@@ -228,10 +224,5 @@ public class MessageReceiver implements Runnable {
         SnapshotSender snapshotSender = new SnapshotSender(id, message);
         Thread thread = new Thread(snapshotSender);
         thread.start();
-//        try {
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 }

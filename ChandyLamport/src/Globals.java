@@ -1,6 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -22,6 +23,7 @@ public class Globals {
     public static int markersReceivedSoFar = 0;
     public static boolean repliedToSnapshot = false;
     public static boolean isSystemTerminated = false;
+    public static HashSet<Integer> markersReceived = new HashSet<>();
 
     /**
      * Application message related globals

@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 public class TerminationDetector implements Runnable {
 
+    private static int markerId = 1;
     private static class PayloadComparator implements Comparator<Payload> {
 
         public PayloadComparator() {
@@ -44,6 +45,7 @@ public class TerminationDetector implements Runnable {
         Globals.log(myPayload.toString());
         Globals.addPayload(myPayload);
         broadcastMessage(MessageType.MARKER);
+        markerId++;
     }
 
     private void sendFinishMessages() {
@@ -52,17 +54,11 @@ public class TerminationDetector implements Runnable {
     }
 
     private void broadcastMessage(MessageType type) {
-        Message snapshotMessage = new Message(ID, null, type);
+        Message snapshotMessage = new Message(ID, null, type, markerId);
         for (Integer neighborId : neighbors) {
             SnapshotSender snapshotSender = new SnapshotSender(neighborId, snapshotMessage);
             Thread thread = new Thread(snapshotSender);
             thread.start();
-//            try {
-//                thread.join();
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                e.printStackTrace();
-//            }
         }
     }
 

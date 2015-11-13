@@ -16,11 +16,19 @@ public class Message implements Serializable {
     private final int id;
     private final ArrayList<Payload> payload;
     private final MessageType type;
+    private int messageId = 0;
 
     public Message(final int id, final ArrayList<Payload> payload, final MessageType type) {
         this.id = id;
         this.payload = payload;
         this.type = type;
+    }
+
+    public Message(final int id, final ArrayList<Payload> payload, final MessageType type, final int mId) {
+        this.id = id;
+        this.payload = payload;
+        this.type = type;
+        this.messageId = mId;
     }
 
     public ArrayList<Payload> getPayload() {
@@ -33,6 +41,10 @@ public class Message implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public int getMessageId() {
+        return messageId;
     }
 
     @Override
