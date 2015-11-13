@@ -63,7 +63,7 @@ public class ClusterNode {
         }
 
         while (NetworkComponents.getSocketMapSize() < neighbors.size()) {
-//            System.out.println(NetworkComponents.getSocketMapSize() + " Waiting... " + neighbors.size());
+            System.out.println(NetworkComponents.getSocketMapSize() + " Waiting... " + neighbors.size());
             Thread.sleep(WAIT_TIME);
         }
 
@@ -167,18 +167,9 @@ public class ClusterNode {
             Thread terminationDetectorThread = cNode.launchTerminationDetector();
 
             while(!Globals.isSystemTerminated()) {
-//                Thread.sleep(WAIT_TIME);
             }
             Thread.sleep(WAIT_TIME);
             System.exit(0);
-
-//            senderThread.join();
-//            for (Thread thread : receiverThreads) {
-//                thread.join();
-//            }
-//            if(terminationDetectorThread != null) {
-//                terminationDetectorThread.join();
-//            }
 
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
