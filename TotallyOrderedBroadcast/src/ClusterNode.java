@@ -12,24 +12,65 @@ import java.util.HashMap;
 public class ClusterNode {
 
     private static final long WAIT_TIME = 3000L;
-
     private int id;
     private NodeInfo nodeInfo;
     private HashMap<Integer, NodeInfo> nodeMap;
     private ServerSocket listenerSocket;
+    private int logicalClock;
 
     public ClusterNode() {
     }
 
 
-    public void initializeNode(String config, int nodeId) throws IOException {
+    public void initializeNode(String config, int nodeId, int logicalClock) throws IOException {
         id = nodeId;
         nodeMap = AppConfigurations.getNodeMap();
         nodeInfo = nodeMap.get(nodeId);
         listenerSocket = new ServerSocket(nodeInfo.getPortNumber());
+        this.logicalClock = logicalClock;
     }
 
-    /**
+    public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public HashMap<Integer, NodeInfo> getNodeMap() {
+		return nodeMap;
+	}
+
+
+	public void setNodeMap(HashMap<Integer, NodeInfo> nodeMap) {
+		this.nodeMap = nodeMap;
+	}
+
+
+	public ServerSocket getListenerSocket() {
+		return listenerSocket;
+	}
+
+
+	public void setListenerSocket(ServerSocket listenerSocket) {
+		this.listenerSocket = listenerSocket;
+	}
+
+
+	public int getLogicalClock() {
+		return logicalClock;
+	}
+
+
+	public void setLogicalClock(int logicalClock) {
+		this.logicalClock = logicalClock;
+	}
+
+
+	/**
      * Establish connection with the neighbors and adds entries for 
      * connection sockets, input streams and output streams in global maps
      * @throws InterruptedException
@@ -117,7 +158,7 @@ public class ClusterNode {
 
         ClusterNode cNode = new ClusterNode();
         try {
-            cNode.initializeNode(configFileName, id);
+            cNode.initializeNode(configFileName, id, 0);
             Globals.log(cNode.toString());
 
             cNode.establishConnections();

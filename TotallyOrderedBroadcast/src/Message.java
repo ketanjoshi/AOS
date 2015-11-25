@@ -13,10 +13,14 @@ public class Message implements Serializable {
 
     private final int id;
     private final String content;
+    private final MessageType messageType;
+    private final int logicalClock;
 
-    public Message(final int id, final String content) {
+    public Message(final int id, final String content, MessageType messageType, int logicalClock) {
         this.id = id;
         this.content = content;
+        this.messageType = messageType;
+        this.logicalClock = logicalClock;
     }
 
     public int getId() {
@@ -27,7 +31,15 @@ public class Message implements Serializable {
         return content;
     }
 
-    @Override
+    public MessageType getMessageType() {
+		return messageType;
+	}
+
+	public int getLogicalClock() {
+		return logicalClock;
+	}
+
+	@Override
     public String toString() {
         return "Id : " + id
                 + " Content : " + content;
