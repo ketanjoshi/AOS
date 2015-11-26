@@ -1,0 +1,33 @@
+#
+# Configuration file for CS6378 Project 1
+#
+# As per the "shell" convention, anything following a hash sign is a comment and should be ignored. The 
+# configuration file shall not exceed 100 Kb in size. The configuration file consists of 3 sections. Each section
+# is delimited by one or more blank lines. The first section configures the number of nodes in the system. The
+# second section configures the hostname of the nodes and the ports on which the nodes will listen for incoming
+# connections. The third section contains a list of tokens and the paths which they are required to use to
+# traverse through the system.
+#
+#
+# Number of nodes and netID
+# 
+# The first uncommented line shall consist of an integer followed by a string. The integer shall be the number of
+# nodes in the system (hereafter referred to as n), and the string shall be the netID used to login to the dcXX
+# machines.
+#
+# CLARIFICATION 9/14/2015: This NetID should be used to login to the dcXX machines. It is *NOT* the NetID which 
+# should be appear in the output file.
+#
+4 10 1000
+
+# Location of each node
+# hall have exactly one line in this section. Each line shall start with a unique ID for the node. Nodes
+# shall be numbered by integers in the range [0, n-1]. The first token shall be an integer, which consists of the 
+# unique ID for the node. The second shall be a string, which is is the hostname on which your program for the node
+# shall be hosted. The third token shall be the port on which the node listens for incoming connections. Each of
+# these three tokens shall be separated by one or more whitespace characters (\s*). 
+#
+0 localhost 39320
+1 localhost 50078
+2 localhost 5251
+3 localhost 2321
