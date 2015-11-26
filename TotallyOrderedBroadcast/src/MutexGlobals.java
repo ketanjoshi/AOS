@@ -9,6 +9,7 @@ public class MutexGlobals
 {
 	private static PriorityQueue<MutexPriorityQueueElement> mutexReqQueue = new PriorityQueue<MutexPriorityQueueElement>();
 
+	public static int id;
     protected static HashMap<Integer, Socket> socketMap = new HashMap<>();
     protected static HashMap<Integer, ObjectInputStream> readerStreamMap = new HashMap<>();
     protected static HashMap<Integer, ObjectOutputStream> writerStreamMap = new HashMap<>();

@@ -22,6 +22,7 @@ public class AppConfigurations {
     public static void setupApplicationEnvironment(String configFileName, int id) {
 
         TobGlobals.id = id;
+        MutexGlobals.id = id;
         Scanner lineScanner = null;
         try (
                 Scanner scanner = new Scanner(new File(configFileName))
@@ -32,6 +33,7 @@ public class AppConfigurations {
             lineScanner = new Scanner(input);
             int numNodes = lineScanner.nextInt();
             TobGlobals.numNodes = numNodes;
+            MutexGlobals.numNodes = numNodes;
             int numMessages = lineScanner.nextInt();
             TobGlobals.numMessages = numMessages;
             int delay = lineScanner.nextInt();

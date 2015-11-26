@@ -15,8 +15,8 @@ public class ClusterNode {
     private int id;
     private NodeInfo nodeInfo;
     private HashMap<Integer, NodeInfo> nodeMap;
-    private ServerSocket listenerSocket;
     private int logicalClock;
+    private ServerSocket listenerSocket;
 
     public ClusterNode() {
     }
@@ -26,8 +26,9 @@ public class ClusterNode {
         id = nodeId;
         nodeMap = AppConfigurations.getNodeMap();
         nodeInfo = nodeMap.get(nodeId);
-        listenerSocket = new ServerSocket(nodeInfo.getPortNumber());
         this.logicalClock = logicalClock;
+        listenerSocket = new ServerSocket(nodeInfo.getPortNumber());
+//        listenerSocket.setReuseAddress(true);
     }
 
     public int getId() {
@@ -47,16 +48,6 @@ public class ClusterNode {
 
 	public void setNodeMap(HashMap<Integer, NodeInfo> nodeMap) {
 		this.nodeMap = nodeMap;
-	}
-
-
-	public ServerSocket getListenerSocket() {
-		return listenerSocket;
-	}
-
-
-	public void setListenerSocket(ServerSocket listenerSocket) {
-		this.listenerSocket = listenerSocket;
 	}
 
 
@@ -91,7 +82,8 @@ public class ClusterNode {
 
         for (int i = 0; i < TobGlobals.numNodes; i++) {
 
-            if (i < id || TobGlobals.hasSocketEntry(i)) {
+//            if (i < id || TobGlobals.hasSocketEntry(i)) {
+            if (i < id) {
                 continue;
             }
             addToTobNetworkComponents(i);
@@ -119,7 +111,8 @@ public class ClusterNode {
 
         for (int i = 0; i < MutexGlobals.numNodes; i++) {
 
-            if (i < id || MutexGlobals.hasSocketEntry(i)) {
+//            if (i < id || MutexGlobals.hasSocketEntry(i)) {
+            if (i < id) {
                 continue;
             }
             addToMutexNetworkComponents(i);
@@ -164,6 +157,9 @@ public class ClusterNode {
         oos.flush();
         oos.reset();
        	TobGlobals.addOutputStreamEntry(nodeId, oos);
+       	if(nodeId == id) {
+            return;
+        }
        	TobGlobals.addInputStreamEntry(nodeId, new ObjectInputStream(sock.getInputStream()));
     }
     private void addToMutexNetworkComponents(int nodeId) throws UnknownHostException, IOException {
@@ -191,6 +187,9 @@ public class ClusterNode {
         oos.flush();
         oos.reset();
         MutexGlobals.addOutputStreamEntry(nodeId, oos);
+        if(nodeId == id) {
+            return;
+        }
         MutexGlobals.addInputStreamEntry(nodeId, new ObjectInputStream(sock.getInputStream()));
     }
 
@@ -215,7 +214,14 @@ public class ClusterNode {
             TobGlobals.log(cNode.toString());
 
             cNode.establishTobConnections();
+            System.out.println(TobGlobals.readerStreamMap);
+            System.out.println(TobGlobals.writerStreamMap);
+
+            Thread.sleep(WAIT_TIME);
+
             cNode.establishMutexConnections();
+            System.out.println(MutexGlobals.readerStreamMap);
+            System.out.println(MutexGlobals.writerStreamMap);
 
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
@@ -224,11 +230,6 @@ public class ClusterNode {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
-
-        System.out.println(TobGlobals.readerStreamMap);
-        System.out.println(TobGlobals.writerStreamMap);
-        System.out.println(MutexGlobals.readerStreamMap);
-        System.out.println(MutexGlobals.writerStreamMap);
 
         System.exit(0);
     }

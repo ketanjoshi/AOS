@@ -12,9 +12,9 @@ import java.nio.ByteBuffer;
  */
 public class MutexListener implements Runnable {
 
-    private static final int PEER_SIZE = MutexGlobals.numNodes - 1;
+    private static final int PEER_SIZE = MutexGlobals.numNodes;
     public volatile boolean isRunning = true;
-    private final ServerSocket listenerSocket;
+    private ServerSocket listenerSocket;
 
     private int connector;
 
@@ -41,6 +41,10 @@ public class MutexListener implements Runnable {
                     ByteBuffer bytebuff = ByteBuffer.wrap(buff);
                     int nodeId = bytebuff.getInt();
                     connector = nodeId;
+                    if(nodeId == MutexGlobals.id) {
+                        MutexGlobals.addInputStreamEntry(nodeId, ois);
+                        continue;
+                    }
                     //MutexGlobals.log("Connected : " + nodeId);
 
                     MutexGlobals.addSocketEntry(nodeId, connectionSocket);
@@ -58,6 +62,7 @@ public class MutexListener implements Runnable {
         }
         finally {
             try {
+                System.out.println("Closing listener");
                 listenerSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();

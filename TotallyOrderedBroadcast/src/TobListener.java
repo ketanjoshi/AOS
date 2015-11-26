@@ -12,15 +12,16 @@ import java.nio.ByteBuffer;
  */
 public class TobListener implements Runnable {
 
-    private static final int PEER_SIZE = TobGlobals.numNodes - 1;
+    private static final int PEER_SIZE = TobGlobals.numNodes;
     public volatile boolean isRunning = true;
-    private final ServerSocket listenerSocket;
+    private ServerSocket listenerSocket;
 
     private int connector;
 
     public TobListener(final ServerSocket listenerSocket) {
 
         this.listenerSocket = listenerSocket;
+
     }
 
     @Override
@@ -41,6 +42,10 @@ public class TobListener implements Runnable {
                     ByteBuffer bytebuff = ByteBuffer.wrap(buff);
                     int nodeId = bytebuff.getInt();
                     connector = nodeId;
+                    if(nodeId == TobGlobals.id) {
+                        TobGlobals.addInputStreamEntry(nodeId, ois);
+                        continue;
+                    }
                     TobGlobals.log("Connected : " + nodeId);
 
                     TobGlobals.addSocketEntry(nodeId, connectionSocket);
@@ -56,13 +61,14 @@ public class TobListener implements Runnable {
             TobGlobals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
         }
-        finally {
-            try {
-                listenerSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        finally {
+//            try {
+//                System.out.println("Closing listener");
+//                listenerSocket.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 }
