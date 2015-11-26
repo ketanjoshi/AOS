@@ -76,10 +76,10 @@ public class ClusterNode {
      * @throws InterruptedException
      * @throws IOException
      */
-    public void establishConnections() throws InterruptedException, IOException {
+    public void establishTobConnections() throws InterruptedException, IOException {
         // Launch listener thread
         // Connect to all the neighbors with nodeId > own id
-        Listener listener = new Listener(listenerSocket);
+        TobListener listener = new TobListener(listenerSocket);
         Thread listenerThread = new Thread(listener);
         listenerThread.start();
 
@@ -89,17 +89,44 @@ public class ClusterNode {
          */
         Thread.sleep(WAIT_TIME);
 
-        for (int i = 0; i < Globals.numNodes; i++) {
+        for (int i = 0; i < TobGlobals.numNodes; i++) {
 
-            if (i < id || NetworkComponents.hasSocketEntry(i)) {
+            if (i < id || TobGlobals.hasSocketEntry(i)) {
                 continue;
             }
-
-            addToNetworkComponents(i);
+            addToTobNetworkComponents(i);
         }
 
-        while (NetworkComponents.getSocketMapSize() < Globals.numNodes) {
-            System.out.println(NetworkComponents.getSocketMapSize() + " Waiting... " + Globals.numNodes);
+        while (TobGlobals.getSocketMapSize() < TobGlobals.numNodes) {
+            System.out.println(TobGlobals.getSocketMapSize() + " Waiting... " + TobGlobals.numNodes);
+            Thread.sleep(WAIT_TIME);
+        }
+
+        listenerThread.interrupt();
+    }
+    public void establishMutexConnections() throws InterruptedException, IOException {
+        // Launch listener thread
+        // Connect to all the neighbors with nodeId > own id
+        MutexListener listener = new MutexListener(listenerSocket);
+        Thread listenerThread = new Thread(listener);
+        listenerThread.start();
+
+        /**
+         *  Wait for sometime so that all the nodes are initialized
+         *  and their listener threads are up
+         */
+        Thread.sleep(WAIT_TIME);
+
+        for (int i = 0; i < MutexGlobals.numNodes; i++) {
+
+            if (i < id || MutexGlobals.hasSocketEntry(i)) {
+                continue;
+            }
+            addToMutexNetworkComponents(i);
+        }
+
+        while (MutexGlobals.getSocketMapSize() < MutexGlobals.numNodes) {
+            System.out.println(MutexGlobals.getSocketMapSize() + " Waiting... " + MutexGlobals.numNodes);
             Thread.sleep(WAIT_TIME);
         }
 
@@ -112,10 +139,10 @@ public class ClusterNode {
      * @throws UnknownHostException
      * @throws IOException
      */
-    private void addToNetworkComponents(int nodeId) throws UnknownHostException, IOException {
+    private void addToTobNetworkComponents(int nodeId) throws UnknownHostException, IOException {
         NodeInfo info = nodeMap.get(nodeId);
 
-        Globals.log("Trying to connect " + nodeId + " - " + info);
+        TobGlobals.log("Trying to connect " + nodeId + " - " + info);
         boolean connected = false;
         Socket sock = null;
         while (!connected) {
@@ -123,13 +150,12 @@ public class ClusterNode {
                 sock = new Socket(info.getHostName(), info.getPortNumber());
                 connected = true;
             } catch (ConnectException ce) {
-                Globals.log("Consuming ConnectException... Retrying...");
+                TobGlobals.log("Consuming ConnectException... Retrying...");
             }
         }
-        Globals.log("Connected successfully : " + nodeId);
-
-        NetworkComponents.addSocketEntry(nodeId, sock);
-
+        TobGlobals.log("Connected successfully : " + nodeId);
+       
+       	TobGlobals.addSocketEntry(nodeId, sock);
         ByteBuffer dbuf = ByteBuffer.allocate(4);
         dbuf.putInt(id);
         ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
@@ -137,8 +163,35 @@ public class ClusterNode {
         oos.write(bytes);
         oos.flush();
         oos.reset();
-        NetworkComponents.addOutputStreamEntry(nodeId, oos);
-        NetworkComponents.addInputStreamEntry(nodeId, new ObjectInputStream(sock.getInputStream()));
+       	TobGlobals.addOutputStreamEntry(nodeId, oos);
+       	TobGlobals.addInputStreamEntry(nodeId, new ObjectInputStream(sock.getInputStream()));
+    }
+    private void addToMutexNetworkComponents(int nodeId) throws UnknownHostException, IOException {
+        NodeInfo info = nodeMap.get(nodeId);
+
+       // MutexGlobals.log("Trying to connect " + nodeId + " - " + info);
+        boolean connected = false;
+        Socket sock = null;
+        while (!connected) {
+            try {
+                sock = new Socket(info.getHostName(), info.getPortNumber());
+                connected = true;
+            } catch (ConnectException ce) {
+         //   	MutexGlobals.log("Consuming ConnectException... Retrying...");
+            }
+        }
+        //MutexGlobals.log("Connected successfully : " + nodeId);
+       
+        MutexGlobals.addSocketEntry(nodeId, sock);
+        ByteBuffer dbuf = ByteBuffer.allocate(4);
+        dbuf.putInt(id);
+        ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
+        byte[] bytes = dbuf.array();
+        oos.write(bytes);
+        oos.flush();
+        oos.reset();
+        MutexGlobals.addOutputStreamEntry(nodeId, oos);
+        MutexGlobals.addInputStreamEntry(nodeId, new ObjectInputStream(sock.getInputStream()));
     }
 
     @Override
@@ -153,15 +206,16 @@ public class ClusterNode {
         int id = Integer.parseInt(args[0]);
         String configFileName = args[1];
 
-        Globals.initialiseLogger(AppConfigurations.getLogFileName(id, configFileName));
+        TobGlobals.initialiseLogger(AppConfigurations.getLogFileName(id, configFileName));
         AppConfigurations.setupApplicationEnvironment(configFileName, id);
 
         ClusterNode cNode = new ClusterNode();
         try {
             cNode.initializeNode(configFileName, id, 0);
-            Globals.log(cNode.toString());
+            TobGlobals.log(cNode.toString());
 
-            cNode.establishConnections();
+            cNode.establishTobConnections();
+            cNode.establishMutexConnections();
 
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");
@@ -170,6 +224,11 @@ public class ClusterNode {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
+
+        System.out.println(TobGlobals.readerStreamMap);
+        System.out.println(TobGlobals.writerStreamMap);
+        System.out.println(MutexGlobals.readerStreamMap);
+        System.out.println(MutexGlobals.writerStreamMap);
 
         System.exit(0);
     }

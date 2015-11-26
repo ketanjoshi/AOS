@@ -15,6 +15,7 @@ public class Message implements Serializable {
     private final String content;
     private final MessageType messageType;
     private final int logicalClock;
+    private int randomNumber;
 
     public Message(final int id, final String content, MessageType messageType, int logicalClock) {
         this.id = id;

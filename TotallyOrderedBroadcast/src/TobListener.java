@@ -10,15 +10,15 @@ import java.nio.ByteBuffer;
  * It accepts a connection (if not already established) and adds it into global connection maps
  * @author ketan
  */
-public class Listener implements Runnable {
+public class TobListener implements Runnable {
 
-    private static final int PEER_SIZE = Globals.numNodes - 1;
+    private static final int PEER_SIZE = TobGlobals.numNodes - 1;
     public volatile boolean isRunning = true;
     private final ServerSocket listenerSocket;
 
     private int connector;
 
-    public Listener(final ServerSocket listenerSocket) {
+    public TobListener(final ServerSocket listenerSocket) {
 
         this.listenerSocket = listenerSocket;
     }
@@ -30,7 +30,7 @@ public class Listener implements Runnable {
 
         try {
 
-            while (NetworkComponents.getSocketMapSize() < PEER_SIZE) {
+            while (TobGlobals.getSocketMapSize() < PEER_SIZE) {
 
                 try {
                     connectionSocket = listenerSocket.accept();
@@ -41,19 +41,19 @@ public class Listener implements Runnable {
                     ByteBuffer bytebuff = ByteBuffer.wrap(buff);
                     int nodeId = bytebuff.getInt();
                     connector = nodeId;
-                    Globals.log("Connected : " + nodeId);
+                    TobGlobals.log("Connected : " + nodeId);
 
-                    NetworkComponents.addSocketEntry(nodeId, connectionSocket);
-                    NetworkComponents.addInputStreamEntry(nodeId, ois);
-                    NetworkComponents.addOutputStreamEntry(nodeId, new ObjectOutputStream(connectionSocket.getOutputStream()));
+                    TobGlobals.addSocketEntry(nodeId, connectionSocket);
+                    TobGlobals.addInputStreamEntry(nodeId, ois);
+                    TobGlobals.addOutputStreamEntry(nodeId, new ObjectOutputStream(connectionSocket.getOutputStream()));
 
                 } catch (IOException e) {
-                    Globals.log(connector + " - Listener : " + e.getMessage());
+                    TobGlobals.log(connector + " - Listener : " + e.getMessage());
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            Globals.log(connector + " - Listener : " + e.getMessage());
+            TobGlobals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
         }
         finally {

@@ -21,7 +21,7 @@ public class AppConfigurations {
      */
     public static void setupApplicationEnvironment(String configFileName, int id) {
 
-        Globals.id = id;
+        TobGlobals.id = id;
         Scanner lineScanner = null;
         try (
                 Scanner scanner = new Scanner(new File(configFileName))
@@ -31,11 +31,11 @@ public class AppConfigurations {
 
             lineScanner = new Scanner(input);
             int numNodes = lineScanner.nextInt();
-            Globals.numNodes = numNodes;
+            TobGlobals.numNodes = numNodes;
             int numMessages = lineScanner.nextInt();
-            Globals.numMessages = numMessages;
+            TobGlobals.numMessages = numMessages;
             int delay = lineScanner.nextInt();
-            Globals.delay = delay;
+            TobGlobals.delay = delay;
             lineScanner.close();
 
             input = getNextValidInputLine(scanner);
