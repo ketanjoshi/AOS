@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -21,6 +22,9 @@ public class TobGlobals {
      */
     public static int sentMessageCount = 0;
     public static int receivedMessageCount = 0;
+
+    public static ArrayList<Message> receivedTobs = new ArrayList<>();
+    public static Integer pendingTobRequestNum = 0;
 
     /**
      * Environment globals

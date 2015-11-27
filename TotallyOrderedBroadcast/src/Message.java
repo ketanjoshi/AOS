@@ -14,14 +14,18 @@ public class Message implements Serializable {
     private final int id;
     private final String content;
     private final MessageType messageType;
-    private final int logicalClock;
+    private final Integer logicalClock;
     private int randomNumber;
 
-    public Message(final int id, final String content, MessageType messageType, int logicalClock) {
+    public Message(final int id, final String content, MessageType messageType, Integer logicalClock) {
         this.id = id;
         this.content = content;
         this.messageType = messageType;
         this.logicalClock = logicalClock;
+    }
+
+    public Message(final int id, final String content, MessageType messageType) {
+        this(id, content, messageType, null);
     }
 
     public int getId() {

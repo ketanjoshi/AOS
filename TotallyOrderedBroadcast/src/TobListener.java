@@ -61,14 +61,6 @@ public class TobListener implements Runnable {
             TobGlobals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                System.out.println("Closing listener");
-//                listenerSocket.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
 }
