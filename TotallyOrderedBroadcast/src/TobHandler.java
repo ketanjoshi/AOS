@@ -14,28 +14,30 @@ public class TobHandler {
 
     private static final HashMap<Integer, ObjectInputStream> INPUTSTREAM_MAP = TobGlobals.readerStreamMap;
 
-    private static TobHandler tobHandler = null;
+    private static TobHandler tobHandler = new TobHandler();
     private static ArrayList<Thread> tobReceivers = null;
     private static Thread tobSender = null;
+    private static boolean initialised = false;
 
     private TobHandler() {}
 
     public static TobHandler getInstance() {
-        if(tobHandler == null) {
-            tobHandler = new TobHandler();
-            setupTobReceivers();
-            setupTobSender();
-        }
         return tobHandler;
     }
 
-    private static void setupTobSender() {
+    public void initialise() {
+        setupTobReceivers();
+        setupTobSender();
+        initialised = true;
+    }
+
+    private void setupTobSender() {
         TobSender sender = new TobSender();
         tobSender = new Thread(sender);
         tobSender.start();
     }
 
-    private static void setupTobReceivers() {
+    private void setupTobReceivers() {
         tobReceivers = new ArrayList<>();
         for (ObjectInputStream stream : INPUTSTREAM_MAP.values()) {
             TobReceiver receiver = new TobReceiver(stream);
@@ -46,12 +48,18 @@ public class TobHandler {
     }
 
     public void tobSend() {
+        if(!initialised)
+            initialise();
+
         synchronized (TobGlobals.pendingTobRequestNum) {
             TobGlobals.pendingTobRequestNum++;
         }
     }
 
     public List<Message> tobReceive() {
+        if(!initialised)
+            initialise();
+
         ArrayList<Message> list = new ArrayList<>();
         synchronized (TobGlobals.receivedTobs) {
             list.addAll(TobGlobals.receivedTobs);
