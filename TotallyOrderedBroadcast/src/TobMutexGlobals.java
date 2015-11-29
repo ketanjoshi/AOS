@@ -1,12 +1,12 @@
 
 public class TobMutexGlobals {
-	private  int logicalclock;
+	private static int logicalclock;
 
-	public int getLogicalclock() {
+	public static int getLogicalclock() {
 		return logicalclock;
 	}
 
-	public void setLogicalclock(int logicalclock) {
-		this.logicalclock = logicalclock;
+	public static void setLogicalclock(int logicalclock) {
+		TobMutexGlobals.logicalclock = logicalclock;
 	}
 }

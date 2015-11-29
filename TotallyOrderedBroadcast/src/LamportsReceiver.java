@@ -53,7 +53,7 @@ public class LamportsReceiver implements Runnable{
 			// reply to the node with the current logical clock
 			//Initiate sender thread to send reply msg to this node
 			//////////////////need to put the current logical clock of the node last
-			Message msg = new Message(MutexGlobals.id, null, MessageType.MUTEX_REPLY,rcvdMessage.getLogicalClock());
+			Message msg = new Message(MutexGlobals.id, null, MessageType.MUTEX_REPLY,TobMutexGlobals.getLogicalclock());
 				
 			ObjectOutputStream outputStream = MutexGlobals.getWriterStream(rcvdMessage.getId());
 			LamportsSender lamportSender = new LamportsSender(msg,outputStream);
