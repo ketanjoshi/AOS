@@ -22,10 +22,6 @@ public class LamportsSender implements Runnable{
 			{
 				broadcastMutexMessages();
 			}
-			else if (msg.getMessageType().equals(MessageType.CS_ENTER))
-			{
-				// Inform TOB layer that it has permission for Critical section
-			}
 			else if (msg.getMessageType().equals(MessageType.MUTEX_REPLY))
 			{
 				// send reply to the node id (whose request message is received)
