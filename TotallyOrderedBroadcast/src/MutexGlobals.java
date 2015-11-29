@@ -14,8 +14,44 @@ public class MutexGlobals
     protected static HashMap<Integer, ObjectInputStream> readerStreamMap = new HashMap<>();
     protected static HashMap<Integer, ObjectOutputStream> writerStreamMap = new HashMap<>();
     public static int numNodes;
+    private static int mutexRepliesRecvCounter; 
+    private static int mutexReqClock;
     
-    public static int getSocketMapSize() {
+    public static int getMutexReqClock() {
+		return mutexReqClock;
+	}
+
+	public static void setMutexReqClock(int mutexReqClock) {
+		MutexGlobals.mutexReqClock = mutexReqClock;
+	}
+
+	public static int getMutexRepliesRecvCounter() {
+		return mutexRepliesRecvCounter;
+	}
+
+    synchronized public static void incrementMutexReplyCount() {
+    	mutexRepliesRecvCounter++;
+    }
+    
+	public static HashMap<Integer, ObjectInputStream> getReaderStreamMap() {
+		return readerStreamMap;
+	}
+
+	public static void setReaderStreamMap(
+			HashMap<Integer, ObjectInputStream> readerStreamMap) {
+		MutexGlobals.readerStreamMap = readerStreamMap;
+	}
+
+	public static HashMap<Integer, ObjectOutputStream> getWriterStreamMap() {
+		return writerStreamMap;
+	}
+
+	public static void setWriterStreamMap(
+			HashMap<Integer, ObjectOutputStream> writerStreamMap) {
+		MutexGlobals.writerStreamMap = writerStreamMap;
+	}
+
+	public static int getSocketMapSize() {
         return socketMap.size();
     }
 
@@ -47,7 +83,7 @@ public class MutexGlobals
 		return mutexReqQueue;
 	}
 
-	public static void addNodeToPriorityQueue(MutexPriorityQueueElement element)
+	synchronized public static void addNodeToPriorityQueue(MutexPriorityQueueElement element)
 	{
 		mutexReqQueue.add(element);
 	}

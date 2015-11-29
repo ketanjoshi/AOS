@@ -1,0 +1,55 @@
+# six global parameters (clusterSize minPerActive maxPerActive minSendDelay snapshotDelay maxNumber)
+22 3 6 100 2000 15
+
+# nodeID hostName listen Port
+0 dc01 3332
+1 dc02 5698
+2 dc03 5251
+3 dc04 3372
+4 dc05 5688
+5 dc06 5241
+6 dc07 3362
+7 dc08 5678
+8 dc09 5231
+9 dc01 3342
+10 dc02 3642
+11 dc03 3542
+12 dc04 4342
+13 dc05 4442
+14 dc06 4542
+15 dc07 4642
+16 dc08 5642
+17 dc09 6642
+18 dc10 7642
+19 dc11 8642
+20 dc12 9642
+21 dc13 9742
+
+
+
+1
+2
+3
+4
+5
+6 16
+7
+8
+9
+10
+9
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+
+
+
+
