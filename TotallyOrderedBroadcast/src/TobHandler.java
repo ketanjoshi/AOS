@@ -18,6 +18,7 @@ public class TobHandler {
     private static ArrayList<Thread> tobReceivers = null;
     private static Thread tobSender = null;
     private static boolean initialised = false;
+    private static MutexHandler mutexHandler = new MutexHandler();
 
     private TobHandler() {}
 
@@ -47,12 +48,12 @@ public class TobHandler {
         }
     }
 
-    public void tobSend() {
+    public void tobSend(String m) {
         if(!initialised)
             initialise();
 
-        synchronized (TobGlobals.pendingTobRequestNum) {
-            TobGlobals.pendingTobRequestNum++;
+        synchronized (TobGlobals.pendingTobs) {
+            TobGlobals.pendingTobs.add(m);
         }
     }
 
@@ -60,6 +61,20 @@ public class TobHandler {
         if(!initialised)
             initialise();
 
+        int receivedTobCount = 0;
+        while(receivedTobCount == 0) {
+            synchronized (TobGlobals.receivedTobs) {
+                receivedTobCount = TobGlobals.receivedTobs.size();
+            }
+            if(receivedTobCount == 0) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
         ArrayList<Message> list = new ArrayList<>();
         synchronized (TobGlobals.receivedTobs) {
             list.addAll(TobGlobals.receivedTobs);
@@ -67,4 +82,9 @@ public class TobHandler {
         }
         return list;
     }
+
+    public static MutexHandler getMutexHandler() {
+        return mutexHandler;
+    }
+
 }

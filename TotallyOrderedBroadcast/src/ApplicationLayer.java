@@ -1,3 +1,5 @@
+import java.util.Random;
+
 
 /**
  * Singleton class which implements application layer behavior.
@@ -9,6 +11,8 @@ public class ApplicationLayer implements Runnable {
 
     private static final long DELAY = TobGlobals.delay;
     private static final long NUM_MSG = TobGlobals.numMessages;
+    private static final Random RANDOM = new Random();
+    private static final int BOUND = 20;
 
     private static ApplicationLayer appLayer = new ApplicationLayer();
     private static TobHandler tobHandler = null;
@@ -36,7 +40,7 @@ public class ApplicationLayer implements Runnable {
             initialise();
 
         for (int i = 0; i < NUM_MSG; i++) {
-            tobHandler.tobSend();
+            tobHandler.tobSend(String.valueOf(RANDOM.nextInt(BOUND)));
             try {
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {

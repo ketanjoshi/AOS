@@ -11,9 +11,9 @@ import java.util.Random;
 public class TobSender implements Runnable {
 
     private static final long SLEEP_TIME = 1000;
-    private static final Random RANDOM = new Random();
     private static final int ID = TobGlobals.id;
     private static final HashMap<Integer, ObjectOutputStream> OUTPUTSTREAM_MAP = TobGlobals.writerStreamMap;
+    private static final MutexHandler MUTEX_HANDLER = TobHandler.getMutexHandler();
 
     public static volatile boolean isRunning = true;
 
@@ -25,42 +25,48 @@ public class TobSender implements Runnable {
     public void run() {
         try {
             while (isRunning) {
-                while(TobGlobals.pendingTobRequestNum == 0) {
+                while(TobGlobals.pendingTobs.size() == 0) {
                     Thread.sleep(SLEEP_TIME);
                 }
-                int messageNum;
-                synchronized (TobGlobals.pendingTobRequestNum) {
-                    messageNum = TobGlobals.pendingTobRequestNum;
-                    TobGlobals.pendingTobRequestNum = 0;
-                }
 
-                System.out.println("CSEnter... waiting...");
-                // blocking call for csEnter
-                System.out.println("CS granted... broadcasting messages...");
+                // Get mutex permissions
+                System.out.println("CSEnter... asking CS permissions...");
+                getMutexPermission();
 
-             // Once csEnter returns, send that many messages
-                for (int i = 0; i < messageNum; i++) {
-                    // Generate random number for i-th message
-                    int randomNum = RANDOM.nextInt(20);
+                synchronized (TobGlobals.pendingTobs) {
 
-                    // Create a message
-                    // TODO: CONFIRM => I feel there is no need to pass logical clock value
-                    Message message = new Message(ID, String.valueOf(randomNum), MessageType.APPLICATION);
+                    System.out.println("CS granted... broadcasting messages...");
 
-                    // Broadcast the message
-                    for (ObjectOutputStream stream : OUTPUTSTREAM_MAP.values()) {
-                        stream.writeObject(message);
-                        stream.flush();
+                    // Once csEnter returns, send that many messages
+                    for (String randomNum : TobGlobals.pendingTobs) {
+                        // Create a message
+                        // TODO: CONFIRM => I feel there is no need to pass logical clock value
+                        Message message = new Message(ID, randomNum, MessageType.APPLICATION);
+
+                        // Broadcast the message
+                        for (ObjectOutputStream stream : OUTPUTSTREAM_MAP.values()) {
+                            stream.writeObject(message);
+                            stream.flush();
+                        }
                     }
+                    TobGlobals.pendingTobs.clear();
                 }
-
 
                 System.out.println("CSLeave... leaving CS...");
                 // call for csLeave
+                releaseMutexPermission();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void getMutexPermission() {
+//        MUTEX_HANDLER.csEnter(clusterNode);
+         // No need of ClusterNode reference here, just need node id and logical clock value
+    }
+
+    private void releaseMutexPermission() {
+//        MUTEX_HANDLER.csLeave(clusterNode);
+    }
 }

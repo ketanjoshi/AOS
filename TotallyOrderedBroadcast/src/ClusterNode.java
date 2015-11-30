@@ -28,7 +28,6 @@ public class ClusterNode {
         nodeInfo = nodeMap.get(nodeId);
         this.logicalClock = logicalClock;
         listenerSocket = new ServerSocket(nodeInfo.getPortNumber());
-//        listenerSocket.setReuseAddress(true);
     }
 
     public int getId() {

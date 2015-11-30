@@ -13,8 +13,6 @@ import java.util.Random;
  */
 public class TobGlobals {
 
-    public static final Random RANDOM = new Random();
-
     public static int loggerCalls = 0;
 
     /**
@@ -24,7 +22,7 @@ public class TobGlobals {
     public static int receivedMessageCount = 0;
 
     public static ArrayList<Message> receivedTobs = new ArrayList<>();
-    public static Integer pendingTobRequestNum = 0;
+    public static ArrayList<String> pendingTobs = new ArrayList<>();
 
     /**
      * Environment globals
