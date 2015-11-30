@@ -13,6 +13,10 @@ public class MutexHandler {
 		LamportsSender lamportSender = new LamportsSender(msg,null);
 		Thread thread = new Thread(lamportSender);
         thread.start();
+
+        while(!TobMutexGlobals.isReqGranted()) {
+            // wait
+        }
 	}
 	public void csLeave()
 	{
