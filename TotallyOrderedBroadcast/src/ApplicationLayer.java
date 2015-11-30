@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -9,6 +10,8 @@ import java.util.Random;
  */
 public class ApplicationLayer implements Runnable {
 
+    private static int collectedTobs = 0;
+    private static ArrayList<String> list = new ArrayList<>();
     private static final long DELAY = TobGlobals.delay;
     private static final long NUM_MSG = TobGlobals.numMessages;
     private static final Random RANDOM = new Random();
@@ -25,12 +28,18 @@ public class ApplicationLayer implements Runnable {
     }
 
     public void initialise() {
-        if(tobHandler == null)
+        if(tobHandler != null)
             return;
 
         tobHandler = TobHandler.getInstance();
         tobHandler.initialise();
         initialised = true;
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
 
     }
 
@@ -48,7 +57,11 @@ public class ApplicationLayer implements Runnable {
                 e.printStackTrace();
             }
         }
-        
+
+        while(true) {
+            System.out.println("Received messages");
+            System.out.println(tobHandler.tobReceive());
+        }
     }
 
 }

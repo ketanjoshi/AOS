@@ -213,14 +213,23 @@ public class ClusterNode {
             TobGlobals.log(cNode.toString());
 
             cNode.establishTobConnections();
-            System.out.println(TobGlobals.readerStreamMap);
-            System.out.println(TobGlobals.writerStreamMap);
+//            System.out.println(TobGlobals.readerStreamMap);
+//            System.out.println(TobGlobals.writerStreamMap);
 
             Thread.sleep(WAIT_TIME);
 
             cNode.establishMutexConnections();
-            System.out.println(MutexGlobals.readerStreamMap);
-            System.out.println(MutexGlobals.writerStreamMap);
+//            System.out.println(MutexGlobals.readerStreamMap);
+//            System.out.println(MutexGlobals.writerStreamMap);
+
+            Thread.sleep(WAIT_TIME);
+
+            // Start application layer
+            ApplicationLayer appLayer = ApplicationLayer.getInstance();
+            appLayer.initialise();
+            Thread appThread = new Thread(appLayer);
+            appThread.start();
+            appThread.join();
 
         } catch (IOException e) {
             System.err.println("Exception thrown during node initialization. Cannot proceed.");

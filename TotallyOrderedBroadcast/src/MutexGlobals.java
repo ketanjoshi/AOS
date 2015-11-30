@@ -7,16 +7,16 @@ import java.util.PriorityQueue;
 
 public class MutexGlobals 
 {
-	private static PriorityQueue<MutexPriorityQueueElement> mutexReqQueue = new PriorityQueue<MutexPriorityQueueElement>();
+    public static PriorityQueue<MutexPriorityQueueElement> mutexReqQueue = new PriorityQueue<MutexPriorityQueueElement>();
 
 	public static int id;
     protected static HashMap<Integer, Socket> socketMap = new HashMap<>();
     protected static HashMap<Integer, ObjectInputStream> readerStreamMap = new HashMap<>();
     protected static HashMap<Integer, ObjectOutputStream> writerStreamMap = new HashMap<>();
     public static int numNodes;
-    private static int mutexRepliesRecvCounter; 
+    public static Integer mutexRepliesRecvCounter = 0; 
     private static int mutexReqClock;
-    
+
     public static int getMutexReqClock() {
 		return mutexReqClock;
 	}

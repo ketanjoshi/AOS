@@ -21,6 +21,7 @@ public class TobReceiver implements Runnable {
         try {
             while (isRunning) {
                 Message message = (Message) iStream.readObject();
+                System.out.println("Received application message from " + message.getId());
                 synchronized (TobGlobals.receivedTobs) {
                     TobGlobals.receivedTobs.add(message);
                 }

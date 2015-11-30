@@ -22,6 +22,7 @@ public class LamportsReceiver implements Runnable{
 				MessageType msgType = message.getMessageType();
 				if (msgType.equals(MessageType.MUTEX_REPLY)) 
 				{
+				    System.out.println("Received reply from : " + message.getId());
 					handleReplyMutexMessages(message.getLogicalClock());
 				}
 				else if (msgType.equals(MessageType.MUTEX_REQUEST))
@@ -39,18 +40,23 @@ public class LamportsReceiver implements Runnable{
 	}
 	private void handleRequestMutexMessages(Message rcvdMessage)
 	{
+	    System.out.println("Received request from  : " + rcvdMessage.getId());
 
         MutexPriorityQueueElement element = new MutexPriorityQueueElement(
                 rcvdMessage.getId(), rcvdMessage.getLogicalClock());
 
         // add node to the priority queue
-        MutexGlobals.addNodeToPriorityQueue(element);
+        synchronized (MutexGlobals.mutexReqQueue) {
+            MutexGlobals.mutexReqQueue.add(element);
+        }
 
         // Take the maximum of the rcvd clock and own clock
         int rcvdLogicalClock = rcvdMessage.getLogicalClock();
 
         // Increment the clock value
-        TobMutexGlobals.setLogicalclock(Math.max(TobMutexGlobals.getLogicalclock(), rcvdLogicalClock) + 1);
+        synchronized (TobMutexGlobals.logicalclock) {
+            TobMutexGlobals.logicalclock = Math.max(TobMutexGlobals.logicalclock, rcvdLogicalClock) + 1;
+        }
 
         // Reply to the node with the current logical clock
         Message msg = new Message(MutexGlobals.id, null,
@@ -59,6 +65,7 @@ public class LamportsReceiver implements Runnable{
         // Initiate sender thread to send reply msg to this node
         ObjectOutputStream outputStream = MutexGlobals.getWriterStream(rcvdMessage.getId());
         LamportsSender lamportSender = new LamportsSender(msg, outputStream);
+        System.out.println("Replying to : " + rcvdMessage.getId());
         Thread thread = new Thread(lamportSender);
         thread.start();
 
@@ -66,31 +73,28 @@ public class LamportsReceiver implements Runnable{
 	
 	private static void handleReplyMutexMessages(int logicalClock)
 	{
-		// check L1 and L2 of Lamport Mutex protocol
-		if (logicalClock >= MutexGlobals.getMutexReqClock())
-		{
-			MutexGlobals.incrementMutexReplyCount();
-		}
-
-		TobMutexGlobals.setReqGranted(checkConditionsForLamport());
+	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
+	        if (logicalClock >= MutexGlobals.getMutexReqClock()) {
+	            MutexGlobals.mutexRepliesRecvCounter++;
+	            System.out.println("Counter : " + MutexGlobals.mutexRepliesRecvCounter);
+	        }
+	        if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
+                synchronized (MutexGlobals.mutexReqQueue) {
+                    MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
+                    if (nodeElement != null && nodeElement.getNodeId() == MutexGlobals.id) {
+                        System.out.println("Top element : " + nodeElement.getNodeId());
+                        // node is itself on the top
+                        // L1 and L2 both are satisfied
+                        synchronized (TobMutexGlobals.reqGranted) {
+                            TobMutexGlobals.reqGranted = true;
+                            System.out.println("Request granted");
+                        }
+                    }
+                }
+            }
+        }
 	}
 
-	/**
-	 * 
-	 */
-	private static boolean checkConditionsForLamport() {
-		if (MutexGlobals.getMutexRepliesRecvCounter() == (MutexGlobals.numNodes -1))
-		{
-			MutexPriorityQueueElement nodeElement = MutexGlobals.getMutexReqQueue().peek();
-			if (nodeElement.getNodeId() == MutexGlobals.id) 
-			{
-				// node is itself on the top
-				// L1 and L2 both are satisfied
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	private void handleCSLeaveMessages(Message rcvdMessage)
 	{
@@ -98,10 +102,17 @@ public class LamportsReceiver implements Runnable{
         MutexPriorityQueueElement element = new MutexPriorityQueueElement(
                 rcvdMessage.getId(), rcvdMessage.getLogicalClock());
 
-        // delete node from the priority queue
-        MutexGlobals.removeNodeFromPriorityQueue(element);
+        synchronized (MutexGlobals.mutexReqQueue) {
+            MutexGlobals.mutexReqQueue.remove(element);
+            MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
+            if (nodeElement != null && nodeElement.getNodeId() == MutexGlobals.id) {
+                // node is itself on the top
+                // L1 and L2 both are satisfied
+                synchronized (TobMutexGlobals.reqGranted) {
+                    TobMutexGlobals.reqGranted = true;
+                }
+            }
+        }
 
-        // check L1 and L2 as node can be on the top
-        TobMutexGlobals.setReqGranted(checkConditionsForLamport());
 	}
 }

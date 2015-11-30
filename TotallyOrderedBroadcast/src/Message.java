@@ -47,6 +47,6 @@ public class Message implements Serializable {
 	@Override
     public String toString() {
         return "Id : " + id
-                + " Content : " + content;
+                + " Content : " + content + "\n";
     }
 }

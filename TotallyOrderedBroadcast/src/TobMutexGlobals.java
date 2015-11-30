@@ -1,7 +1,7 @@
 
 public class TobMutexGlobals {
-	private static int logicalclock;
-	private static boolean reqGranted = false;
+	public static Integer logicalclock = 0;
+	public static volatile Boolean reqGranted = false;
 	
 	public static int getLogicalclock() 
 	{

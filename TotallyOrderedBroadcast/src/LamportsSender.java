@@ -16,18 +16,13 @@ public class LamportsSender implements Runnable{
 	
 	@Override
 	public void run() {
-		while(isRunning)
-		{
-			if (msg.getMessageType().equals(MessageType.MUTEX_REQUEST) || msg.getMessageType().equals(MessageType.CS_LEAVE))
-			{
-				broadcastMutexMessages();
-			}
-			else if (msg.getMessageType().equals(MessageType.MUTEX_REPLY))
-			{
-				// send reply to the node id (whose request message is received)
-				sendReplyMutexMessage();
-			}
-		}
+        if (msg.getMessageType().equals(MessageType.MUTEX_REQUEST)
+                || msg.getMessageType().equals(MessageType.CS_LEAVE)) {
+            broadcastMutexMessages();
+        } else if (msg.getMessageType().equals(MessageType.MUTEX_REPLY)) {
+            // send reply to the node id (whose request message is received)
+            sendReplyMutexMessage();
+        }
 	}
 	
 	private void broadcastMutexMessages()
