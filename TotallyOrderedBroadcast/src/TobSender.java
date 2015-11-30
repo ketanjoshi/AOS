@@ -62,11 +62,10 @@ public class TobSender implements Runnable {
     }
 
     private void getMutexPermission() {
-//        MUTEX_HANDLER.csEnter(clusterNode);
-         // No need of ClusterNode reference here, just need node id and logical clock value
+        MUTEX_HANDLER.csEnter();
     }
 
     private void releaseMutexPermission() {
-//        MUTEX_HANDLER.csLeave(clusterNode);
+        MUTEX_HANDLER.csLeave();
     }
 }
