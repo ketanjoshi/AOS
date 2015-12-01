@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -10,16 +10,17 @@ import java.util.Random;
  */
 public class ApplicationLayer implements Runnable {
 
-    private static int collectedTobs = 0;
-    private static ArrayList<String> list = new ArrayList<>();
     private static final long DELAY = TobGlobals.delay;
     private static final long NUM_MSG = TobGlobals.numMessages;
+    private static final long NUM_NODES = TobGlobals.numNodes;
     private static final Random RANDOM = new Random();
     private static final int BOUND = 20;
 
     private static ApplicationLayer appLayer = new ApplicationLayer();
     private static TobHandler tobHandler = null;
     private static boolean initialised = false;
+    private static boolean isFirstTob = false;
+    private static int receivedTobs = 0;
 
     private ApplicationLayer() {}
 
@@ -58,10 +59,26 @@ public class ApplicationLayer implements Runnable {
             }
         }
 
-        while(true) {
+        while(receivedTobs < (NUM_MSG * NUM_NODES)) {
             System.out.println("Received messages");
-            System.out.println(tobHandler.tobReceive());
+            List<Message> list = tobHandler.tobReceive();
+            receivedTobs += list.size();
+            logReceivedTobs(list);
+            System.out.println(list);
         }
+    }
+
+    private void logReceivedTobs(List<Message> list) {
+        StringBuilder sb = new StringBuilder();
+        for (Message message : list) {
+            if(isFirstTob) {
+                sb.append("\n");
+            } else {
+                isFirstTob = true;
+            }
+            sb.append(message.getContent());
+        }
+        TobGlobals.log(sb.toString());
     }
 
 }

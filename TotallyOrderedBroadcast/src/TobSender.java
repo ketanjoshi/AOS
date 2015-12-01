@@ -1,6 +1,5 @@
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.Random;
 
 
 /**
@@ -40,7 +39,6 @@ public class TobSender implements Runnable {
                     // Once csEnter returns, send that many messages
                     for (String randomNum : TobGlobals.pendingTobs) {
                         // Create a message
-                        // TODO: CONFIRM => I feel there is no need to pass logical clock value
                         Message message = new Message(ID, randomNum, MessageType.APPLICATION);
 
                         // Broadcast the message

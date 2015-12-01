@@ -64,9 +64,7 @@ public class TobHandler {
 
         int receivedTobCount = 0;
         while(receivedTobCount == 0) {
-//            synchronized (TobGlobals.receivedTobs) {
-                receivedTobCount = TobGlobals.receivedTobs.size();
-//            }
+            receivedTobCount = TobGlobals.receivedTobs.size();
             if(receivedTobCount == 0) {
                 try {
                     Thread.sleep(1000);

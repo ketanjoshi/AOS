@@ -5,7 +5,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Class to store and access global scope variables
@@ -13,13 +12,6 @@ import java.util.Random;
  */
 public class TobGlobals {
 
-    public static int loggerCalls = 0;
-
-    /**
-     * Application message related globals
-     */
-    public static int sentMessageCount = 0;
-    public static int receivedMessageCount = 0;
 
     public static ArrayList<Message> receivedTobs = new ArrayList<>();
     public static ArrayList<String> pendingTobs = new ArrayList<>();
@@ -83,30 +75,13 @@ public class TobGlobals {
         }
 
         try {
-            String prependString = loggerCalls == 0 ? "" : "\n";
-            logger.write(prependString + message);
+            logger.write(message);
             logger.flush();
-            loggerCalls++;
         } catch (IOException e) {
             System.err.println("Problem while logging..."
                     + "Last log message : " + message);
         }
     }
 
-    public static synchronized int getSentMessageCount() {
-        return sentMessageCount;
-    }
-
-    public static synchronized void incrementSentMessageCount() {
-        sentMessageCount++;
-    }
-
-    public static synchronized int getReceivedMessageCount() {
-        return receivedMessageCount;
-    }
-
-    public static synchronized void incrementReceivedMessageCount() {
-        receivedMessageCount++;
-    }
 
 }
