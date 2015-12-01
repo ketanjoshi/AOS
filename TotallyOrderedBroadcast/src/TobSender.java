@@ -1,5 +1,6 @@
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -37,17 +38,25 @@ public class TobSender implements Runnable {
                     System.out.println("CS granted... broadcasting messages...");
 
                     // Once csEnter returns, send that many messages
-                    for (String randomNum : TobGlobals.pendingTobs) {
-                        // Create a message
-                        Message message = new Message(ID, randomNum, MessageType.APPLICATION);
-
-                        // Broadcast the message
-                        for (ObjectOutputStream stream : OUTPUTSTREAM_MAP.values()) {
+                    Iterator<String> iter = TobGlobals.pendingTobs.iterator();
+                    String content = iter.next();
+                    while(true) {
+                        if(iter.hasNext())
+                            content += "\n";
+                        else
+                            break;
+                        content += iter.next();
+                    }
+                    TobGlobals.pendingTobs.clear();
+                    // Create a message
+                    Message message = new Message(ID, content, MessageType.APPLICATION);
+                    // Broadcast the message
+                    for (ObjectOutputStream stream : OUTPUTSTREAM_MAP.values()) {
+                        synchronized (stream) {
                             stream.writeObject(message);
                             stream.flush();
                         }
                     }
-                    TobGlobals.pendingTobs.clear();
                 }
 
                 System.out.println("CSLeave... leaving CS...");

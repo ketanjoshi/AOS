@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 public class TobReceiver implements Runnable {
 
     public static volatile boolean isRunning = true;
+    private static int count = 0;
 
     private final ObjectInputStream iStream;
 
@@ -21,10 +22,10 @@ public class TobReceiver implements Runnable {
         try {
             while (isRunning) {
                 Message message = (Message) iStream.readObject();
-                System.out.println("Received application message from " + message.getId());
                 synchronized (TobGlobals.receivedTobs) {
                     TobGlobals.receivedTobs.add(message);
                 }
+                System.out.println("Received application message from " + message.getId());
 
             }
         } catch (Exception e) {

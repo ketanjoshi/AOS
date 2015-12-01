@@ -101,26 +101,25 @@ public class LamportsReceiver implements Runnable{
 	}
 
 	
-	private void handleCSLeaveMessages(Message rcvdMessage)
-	{
-
-        MutexPriorityQueueElement element = new MutexPriorityQueueElement(
-                rcvdMessage.getId(), rcvdMessage.getLogicalClock());
+    private void handleCSLeaveMessages(Message rcvdMessage) {
 
         synchronized (MutexGlobals.mutexReqQueue) {
             MutexGlobals.mutexReqQueue.poll();
             MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
-            if (nodeElement != null && nodeElement.getNodeId() == MutexGlobals.id) {
+            if (nodeElement != null
+                    && nodeElement.getNodeId() == MutexGlobals.id) {
                 // node is itself on the top
                 // L1 and L2 both are satisfied
-                synchronized (TobMutexGlobals.reqGranted) {
-                    TobMutexGlobals.reqGranted = true;
-                }
                 synchronized (MutexGlobals.mutexRepliesRecvCounter) {
-                    MutexGlobals.mutexRepliesRecvCounter = 0;
+                    if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
+                        MutexGlobals.mutexRepliesRecvCounter = 0;
+                        synchronized (TobMutexGlobals.reqGranted) {
+                            TobMutexGlobals.reqGranted = true;
+                        }
+                    }
                 }
             }
         }
 
-	}
+    }
 }

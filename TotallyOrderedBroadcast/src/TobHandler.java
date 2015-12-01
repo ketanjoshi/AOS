@@ -54,7 +54,7 @@ public class TobHandler {
 
         System.out.println("Received tobSend - " + m);
         synchronized (TobGlobals.pendingTobs) {
-            TobGlobals.pendingTobs.add(m);
+            TobGlobals.pendingTobs.add(TobGlobals.id + ":" + m);
         }
     }
 
