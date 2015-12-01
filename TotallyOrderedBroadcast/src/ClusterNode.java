@@ -69,9 +69,9 @@ public class ClusterNode {
     public void establishTobConnections() throws InterruptedException, IOException {
         // Launch listener thread
         // Connect to all the neighbors with nodeId > own id
-        TobListener listener = new TobListener(listenerSocket);
-        Thread listenerThread = new Thread(listener);
-        listenerThread.start();
+//        TobListener listener = new TobListener(listenerSocket);
+//        Thread listenerThread = new Thread(listener);
+//        listenerThread.start();
 
         /**
          *  Wait for sometime so that all the nodes are initialized
@@ -92,21 +92,23 @@ public class ClusterNode {
             System.out.println(TobGlobals.getSocketMapSize() + " Waiting... " + TobGlobals.numNodes);
             Thread.sleep(WAIT_TIME);
         }
+        System.out.println("**************** " + TobGlobals.getSocketMapSize());
 
-        listenerThread.interrupt();
+//        listenerThread.interrupt();
     }
+
     public void establishMutexConnections() throws InterruptedException, IOException {
         // Launch listener thread
         // Connect to all the neighbors with nodeId > own id
-        MutexListener listener = new MutexListener(listenerSocket);
-        Thread listenerThread = new Thread(listener);
-        listenerThread.start();
+//        MutexListener listener = new MutexListener(listenerSocket);
+//        Thread listenerThread = new Thread(listener);
+//        listenerThread.start();
 
         /**
          *  Wait for sometime so that all the nodes are initialized
          *  and their listener threads are up
          */
-        Thread.sleep(WAIT_TIME);
+//        Thread.sleep(WAIT_TIME);
 
         for (int i = 0; i < MutexGlobals.numNodes; i++) {
 
@@ -121,8 +123,9 @@ public class ClusterNode {
             System.out.println(MutexGlobals.getSocketMapSize() + " Waiting... " + MutexGlobals.numNodes);
             Thread.sleep(WAIT_TIME);
         }
+        System.out.println("**************** " + MutexGlobals.getSocketMapSize());
 
-        listenerThread.interrupt();
+//        listenerThread.interrupt();
     }
 
     /**
@@ -145,14 +148,26 @@ public class ClusterNode {
                 TobGlobals.log("Consuming ConnectException... Retrying...");
             }
         }
-        TobGlobals.log("Connected successfully : " + nodeId);
-       
+        System.out.println("Tob Connected successfully : " + nodeId);
+
        	TobGlobals.addSocketEntry(nodeId, sock);
-        ByteBuffer dbuf = ByteBuffer.allocate(4);
+
+       	// Write id in first 4 bytes
+       	ByteBuffer dbuf = ByteBuffer.allocate(4);
         dbuf.putInt(id);
+        byte[] idBytes = dbuf.array();
+        // Write connection type: 0 - Tob, 1- Mutex
+        dbuf = ByteBuffer.allocate(4);
+        dbuf.putInt(0);
+        byte[] tobBytes = dbuf.array();
+
+        // First 4 bytes = idBytes, Last 4 bytes = tobBytes
+        byte[] sendBytes = new byte[8];
+        System.arraycopy(idBytes, 0, sendBytes, 0, 4);
+        System.arraycopy(tobBytes, 0, sendBytes, 4, 4);
+
         ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
-        byte[] bytes = dbuf.array();
-        oos.write(bytes);
+        oos.write(sendBytes);
         oos.flush();
         oos.reset();
        	TobGlobals.addOutputStreamEntry(nodeId, oos);
@@ -175,14 +190,26 @@ public class ClusterNode {
          //   	MutexGlobals.log("Consuming ConnectException... Retrying...");
             }
         }
-        //MutexGlobals.log("Connected successfully : " + nodeId);
+        System.out.println("Mutex Connected successfully : " + nodeId);
        
         MutexGlobals.addSocketEntry(nodeId, sock);
+
+        // Write id in first 4 bytes
         ByteBuffer dbuf = ByteBuffer.allocate(4);
         dbuf.putInt(id);
+        byte[] idBytes = dbuf.array();
+        // Write connection type: 0 - Tob, 1- Mutex
+        dbuf = ByteBuffer.allocate(4);
+        dbuf.putInt(1);
+        byte[] mutBytes = dbuf.array();
+
+        // First 4 bytes = idBytes, Last 4 bytes = mutBytes
+        byte[] sendBytes = new byte[8];
+        System.arraycopy(idBytes, 0, sendBytes, 0, 4);
+        System.arraycopy(mutBytes, 0, sendBytes, 4, 4);
+
         ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
-        byte[] bytes = dbuf.array();
-        oos.write(bytes);
+        oos.write(sendBytes);
         oos.flush();
         oos.reset();
         MutexGlobals.addOutputStreamEntry(nodeId, oos);
@@ -212,16 +239,23 @@ public class ClusterNode {
             cNode.initializeNode(configFileName, id, 0);
             TobGlobals.log(cNode.toString());
 
+            CommonListener listener = new CommonListener(cNode.getListenerSocket());
+            Thread listenerThread = new Thread(listener);
+            listenerThread.start();
+            Thread.sleep(WAIT_TIME);
+
             cNode.establishTobConnections();
 //            System.out.println(TobGlobals.readerStreamMap);
 //            System.out.println(TobGlobals.writerStreamMap);
 
-            Thread.sleep(WAIT_TIME);
+
+//            Thread.sleep(WAIT_TIME);
 
             cNode.establishMutexConnections();
 //            System.out.println(MutexGlobals.readerStreamMap);
 //            System.out.println(MutexGlobals.writerStreamMap);
 
+            listenerThread.interrupt();
             Thread.sleep(WAIT_TIME);
 
             // Start application layer
@@ -241,4 +275,10 @@ public class ClusterNode {
 
         System.exit(0);
     }
+
+
+    public ServerSocket getListenerSocket() {
+        return listenerSocket;
+    }
+
 }

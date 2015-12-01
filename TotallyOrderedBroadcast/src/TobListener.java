@@ -27,6 +27,8 @@ public class TobListener implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("TobListener start");
+
         Socket connectionSocket = null;
 
         try {
@@ -46,7 +48,7 @@ public class TobListener implements Runnable {
                         TobGlobals.addInputStreamEntry(nodeId, ois);
                         continue;
                     }
-                    TobGlobals.log("Connected : " + nodeId);
+                    System.out.println("Tob Connected : " + nodeId);
 
                     TobGlobals.addSocketEntry(nodeId, connectionSocket);
                     TobGlobals.addInputStreamEntry(nodeId, ois);
@@ -60,6 +62,8 @@ public class TobListener implements Runnable {
         } catch (Exception e) {
             TobGlobals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            System.out.println("Finally TobListener");
         }
     }
 

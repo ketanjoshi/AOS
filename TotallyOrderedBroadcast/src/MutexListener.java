@@ -26,6 +26,7 @@ public class MutexListener implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("MutexListener start");
         Socket connectionSocket = null;
 
         try {
@@ -45,7 +46,7 @@ public class MutexListener implements Runnable {
                         MutexGlobals.addInputStreamEntry(nodeId, ois);
                         continue;
                     }
-                    //MutexGlobals.log("Connected : " + nodeId);
+                    System.out.println("Mutex Connected : " + nodeId);
 
                     MutexGlobals.addSocketEntry(nodeId, connectionSocket);
                     MutexGlobals.addInputStreamEntry(nodeId, ois);
@@ -61,12 +62,13 @@ public class MutexListener implements Runnable {
             e.printStackTrace();
         }
         finally {
-            try {
-                System.out.println("Closing listener");
-                listenerSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                System.out.println("Closing listener");
+//                listenerSocket.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            System.out.println("Finally MutexListener");
         }
     }
 

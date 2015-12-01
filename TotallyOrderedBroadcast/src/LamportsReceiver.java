@@ -76,19 +76,24 @@ public class LamportsReceiver implements Runnable{
 	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
 	        if (logicalClock >= MutexGlobals.getMutexReqClock()) {
 	            MutexGlobals.mutexRepliesRecvCounter++;
-	            System.out.println("Counter : " + MutexGlobals.mutexRepliesRecvCounter);
+	            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
 	        }
 	        if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
                 synchronized (MutexGlobals.mutexReqQueue) {
                     MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
+                    if(nodeElement != null) {
+                        System.out.println("********Top element : " + nodeElement.getNodeId());
+                    }
                     if (nodeElement != null && nodeElement.getNodeId() == MutexGlobals.id) {
-                        System.out.println("Top element : " + nodeElement.getNodeId());
                         // node is itself on the top
                         // L1 and L2 both are satisfied
                         synchronized (TobMutexGlobals.reqGranted) {
                             TobMutexGlobals.reqGranted = true;
-                            System.out.println("Request granted");
                         }
+                        synchronized (MutexGlobals.mutexRepliesRecvCounter) {
+                            MutexGlobals.mutexRepliesRecvCounter = 0;
+                        }
+                        System.out.println("Request granted");
                     }
                 }
             }
@@ -110,6 +115,9 @@ public class LamportsReceiver implements Runnable{
                 // L1 and L2 both are satisfied
                 synchronized (TobMutexGlobals.reqGranted) {
                     TobMutexGlobals.reqGranted = true;
+                }
+                synchronized (MutexGlobals.mutexRepliesRecvCounter) {
+                    MutexGlobals.mutexRepliesRecvCounter = 0;
                 }
             }
         }
