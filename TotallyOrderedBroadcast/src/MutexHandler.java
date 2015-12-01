@@ -37,6 +37,12 @@ public class MutexHandler {
     }
 
     public void csLeave() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         synchronized (TobMutexGlobals.reqGranted) {
             TobMutexGlobals.reqGranted = false;
         }
