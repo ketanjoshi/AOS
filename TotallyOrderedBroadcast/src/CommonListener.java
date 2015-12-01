@@ -50,7 +50,6 @@ public class CommonListener implements Runnable {
                     connector = nodeId;
                     if(nodeId == TobGlobals.id) {
                         addInputStreamEntry(nodeId, ois, connType);
-//                        TobGlobals.addInputStreamEntry(nodeId, ois);
                         continue;
                     }
                     if(connType == 0) {
@@ -62,20 +61,15 @@ public class CommonListener implements Runnable {
                     addSocketEntry(nodeId, connectionSocket, connType);
                     addInputStreamEntry(nodeId, ois, connType);
                     addOutputStreamEntry(nodeId, new ObjectOutputStream(connectionSocket.getOutputStream()), connType);
-//                    TobGlobals.addSocketEntry(nodeId, connectionSocket);
-//                    TobGlobals.addInputStreamEntry(nodeId, ois);
-//                    TobGlobals.addOutputStreamEntry(nodeId, new ObjectOutputStream(connectionSocket.getOutputStream()));
 
                 } catch (IOException e) {
-                    TobGlobals.log(connector + " - Listener : " + e.getMessage());
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            TobGlobals.log(connector + " - Listener : " + e.getMessage());
             e.printStackTrace();
         } finally {
-            System.out.println("Finally TobListener");
+            System.out.println("Finally CommonListener");
         }
     }
 

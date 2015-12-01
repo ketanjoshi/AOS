@@ -45,7 +45,7 @@ public class MutexHandler {
 		MutexPriorityQueueElement qElement = new MutexPriorityQueueElement(MutexGlobals.id, TobMutexGlobals.getLogicalclock());
 		
 		synchronized(MutexGlobals.mutexReqQueue) {
-		    MutexGlobals.mutexReqQueue.remove(qElement);
+		    MutexGlobals.mutexReqQueue.poll();
 		}
 
 		Message msg = new Message(MutexGlobals.id, null, MessageType.CS_LEAVE, TobMutexGlobals.getLogicalclock());

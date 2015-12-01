@@ -108,7 +108,7 @@ public class LamportsReceiver implements Runnable{
                 rcvdMessage.getId(), rcvdMessage.getLogicalClock());
 
         synchronized (MutexGlobals.mutexReqQueue) {
-            MutexGlobals.mutexReqQueue.remove(element);
+            MutexGlobals.mutexReqQueue.poll();
             MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
             if (nodeElement != null && nodeElement.getNodeId() == MutexGlobals.id) {
                 // node is itself on the top
