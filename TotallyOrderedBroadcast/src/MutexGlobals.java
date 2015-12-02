@@ -2,6 +2,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.PriorityQueue;
 
 
@@ -14,7 +15,7 @@ public class MutexGlobals
     protected static HashMap<Integer, ObjectInputStream> readerStreamMap = new HashMap<>();
     protected static HashMap<Integer, ObjectOutputStream> writerStreamMap = new HashMap<>();
     public static int numNodes;
-    public static Integer mutexRepliesRecvCounter = 0; 
+    public static HashSet<Integer> mutexRepliesRecvCounter = new HashSet<>(); 
     public static Integer mutexReqClock = -1;
     
 	public static HashMap<Integer, ObjectInputStream> getReaderStreamMap() {

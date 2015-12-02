@@ -23,7 +23,7 @@ public class LamportsReceiver implements Runnable{
 				if (msgType.equals(MessageType.MUTEX_REPLY)) 
 				{
 				    System.out.println("Received reply from : " + message.getId());
-					handleReplyMutexMessages(message.getLogicalClock());
+					handleReplyMutexMessages(message);
 				}
 				else if (msgType.equals(MessageType.MUTEX_REQUEST))
 				{
@@ -41,10 +41,13 @@ public class LamportsReceiver implements Runnable{
 	private void handleRequestMutexMessages(Message rcvdMessage)
 	{
 	    System.out.println("Received request from  : " + rcvdMessage.getId());
+	    int logicalClock = rcvdMessage.getLogicalClock();
+		int source = rcvdMessage.getId();
 	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
 	    	  synchronized (MutexGlobals.mutexReqClock) {
-		        if (MutexGlobals.mutexReqClock != -1 && rcvdMessage.getLogicalClock() >= MutexGlobals.mutexReqClock) {
-		            MutexGlobals.mutexRepliesRecvCounter++;
+		        if ((MutexGlobals.mutexReqClock != -1) && (logicalClock >= MutexGlobals.mutexReqClock) 
+		        		&& (source != MutexGlobals.id) && (!MutexGlobals.mutexRepliesRecvCounter.contains(source))) {
+		            MutexGlobals.mutexRepliesRecvCounter.add(source);
 		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
 		        }
 	    	  }
@@ -78,16 +81,19 @@ public class LamportsReceiver implements Runnable{
 
 	}
 	
-	private static void handleReplyMutexMessages(int logicalClock)
+	private static void handleReplyMutexMessages(Message rcvdMessage)
 	{
+		int logicalClock = rcvdMessage.getLogicalClock();
+		int source = rcvdMessage.getId();
 	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
 	    	  synchronized (MutexGlobals.mutexReqClock) {
-		        if (MutexGlobals.mutexReqClock != -1 && logicalClock >= MutexGlobals.mutexReqClock) {
-		            MutexGlobals.mutexRepliesRecvCounter++;
+		        if ((MutexGlobals.mutexReqClock != -1) && (logicalClock >= MutexGlobals.mutexReqClock) 
+		        		&& (source != MutexGlobals.id) && (!MutexGlobals.mutexRepliesRecvCounter.contains(source))) {
+		            MutexGlobals.mutexRepliesRecvCounter.add(source);
 		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
 		        }
 	    	  }
-	        if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
+	        if (MutexGlobals.mutexRepliesRecvCounter.size() == (MutexGlobals.numNodes - 1)) {
                 synchronized (MutexGlobals.mutexReqQueue) {
                     MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
                     if(nodeElement != null) {
@@ -100,7 +106,7 @@ public class LamportsReceiver implements Runnable{
                             TobMutexGlobals.reqGranted = true;
                         }
                         synchronized (MutexGlobals.mutexRepliesRecvCounter) {
-                            MutexGlobals.mutexRepliesRecvCounter = 0;
+                        	MutexGlobals.mutexRepliesRecvCounter.clear();
                         }
                         synchronized (MutexGlobals.mutexReqClock) {
                             MutexGlobals.mutexReqClock = -1;
@@ -114,10 +120,13 @@ public class LamportsReceiver implements Runnable{
 
 	
     private void handleCSLeaveMessages(Message rcvdMessage) {
+    	int logicalClock = rcvdMessage.getLogicalClock();
+		int source = rcvdMessage.getId();
     	synchronized (MutexGlobals.mutexRepliesRecvCounter) {
     		  synchronized (MutexGlobals.mutexReqClock) {
-		        if (MutexGlobals.mutexReqClock != -1 && rcvdMessage.getLogicalClock() >= MutexGlobals.mutexReqClock) {
-		            MutexGlobals.mutexRepliesRecvCounter++;
+    			  if ((MutexGlobals.mutexReqClock != -1) && (logicalClock >= MutexGlobals.mutexReqClock) 
+  		        		&& (source != MutexGlobals.id) && (!MutexGlobals.mutexRepliesRecvCounter.contains(source))) {
+  		            MutexGlobals.mutexRepliesRecvCounter.add(source);
 		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
 		        }
     		  }
@@ -130,8 +139,8 @@ public class LamportsReceiver implements Runnable{
                 // node is itself on the top
                 // L1 and L2 both are satisfied
                 synchronized (MutexGlobals.mutexRepliesRecvCounter) {
-                    if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
-                        MutexGlobals.mutexRepliesRecvCounter = 0;
+                    if (MutexGlobals.mutexRepliesRecvCounter.size() == (MutexGlobals.numNodes - 1)) {
+                        MutexGlobals.mutexRepliesRecvCounter.clear();
                         synchronized (MutexGlobals.mutexReqClock) {
                             MutexGlobals.mutexReqClock = -1;
                         }
