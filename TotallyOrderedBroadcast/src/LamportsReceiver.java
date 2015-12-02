@@ -41,7 +41,14 @@ public class LamportsReceiver implements Runnable{
 	private void handleRequestMutexMessages(Message rcvdMessage)
 	{
 	    System.out.println("Received request from  : " + rcvdMessage.getId());
-
+	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
+	    	  synchronized (MutexGlobals.mutexReqClock) {
+		        if (MutexGlobals.mutexReqClock != -1 && rcvdMessage.getLogicalClock() >= MutexGlobals.mutexReqClock) {
+		            MutexGlobals.mutexRepliesRecvCounter++;
+		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
+		        }
+	    	  }
+	    }
         MutexPriorityQueueElement element = new MutexPriorityQueueElement(
                 rcvdMessage.getId(), rcvdMessage.getLogicalClock());
 
@@ -74,10 +81,12 @@ public class LamportsReceiver implements Runnable{
 	private static void handleReplyMutexMessages(int logicalClock)
 	{
 	    synchronized (MutexGlobals.mutexRepliesRecvCounter) {
-	        if (logicalClock >= MutexGlobals.getMutexReqClock()) {
-	            MutexGlobals.mutexRepliesRecvCounter++;
-	            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
-	        }
+	    	  synchronized (MutexGlobals.mutexReqClock) {
+		        if (MutexGlobals.mutexReqClock != -1 && logicalClock >= MutexGlobals.mutexReqClock) {
+		            MutexGlobals.mutexRepliesRecvCounter++;
+		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
+		        }
+	    	  }
 	        if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
                 synchronized (MutexGlobals.mutexReqQueue) {
                     MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
@@ -93,6 +102,9 @@ public class LamportsReceiver implements Runnable{
                         synchronized (MutexGlobals.mutexRepliesRecvCounter) {
                             MutexGlobals.mutexRepliesRecvCounter = 0;
                         }
+                        synchronized (MutexGlobals.mutexReqClock) {
+                            MutexGlobals.mutexReqClock = -1;
+                        }
                         System.out.println("Request granted");
                     }
                 }
@@ -102,7 +114,14 @@ public class LamportsReceiver implements Runnable{
 
 	
     private void handleCSLeaveMessages(Message rcvdMessage) {
-
+    	synchronized (MutexGlobals.mutexRepliesRecvCounter) {
+    		  synchronized (MutexGlobals.mutexReqClock) {
+		        if (MutexGlobals.mutexReqClock != -1 && rcvdMessage.getLogicalClock() >= MutexGlobals.mutexReqClock) {
+		            MutexGlobals.mutexRepliesRecvCounter++;
+		            System.out.println("********Counter : " + MutexGlobals.mutexRepliesRecvCounter);
+		        }
+    		  }
+	    }
         synchronized (MutexGlobals.mutexReqQueue) {
             MutexGlobals.mutexReqQueue.poll();
             MutexPriorityQueueElement nodeElement = MutexGlobals.mutexReqQueue.peek();
@@ -113,6 +132,9 @@ public class LamportsReceiver implements Runnable{
                 synchronized (MutexGlobals.mutexRepliesRecvCounter) {
                     if (MutexGlobals.mutexRepliesRecvCounter == (MutexGlobals.numNodes - 1)) {
                         MutexGlobals.mutexRepliesRecvCounter = 0;
+                        synchronized (MutexGlobals.mutexReqClock) {
+                            MutexGlobals.mutexReqClock = -1;
+                        }
                         synchronized (TobMutexGlobals.reqGranted) {
                             TobMutexGlobals.reqGranted = true;
                         }

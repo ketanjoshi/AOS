@@ -15,23 +15,7 @@ public class MutexGlobals
     protected static HashMap<Integer, ObjectOutputStream> writerStreamMap = new HashMap<>();
     public static int numNodes;
     public static Integer mutexRepliesRecvCounter = 0; 
-    private static int mutexReqClock;
-
-    public static int getMutexReqClock() {
-		return mutexReqClock;
-	}
-
-	public static void setMutexReqClock(int mutexReqClock) {
-		MutexGlobals.mutexReqClock = mutexReqClock;
-	}
-
-	public static int getMutexRepliesRecvCounter() {
-		return mutexRepliesRecvCounter;
-	}
-
-    synchronized public static void incrementMutexReplyCount() {
-    	mutexRepliesRecvCounter++;
-    }
+    public static Integer mutexReqClock = -1;
     
 	public static HashMap<Integer, ObjectInputStream> getReaderStreamMap() {
 		return readerStreamMap;
