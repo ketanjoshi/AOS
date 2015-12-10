@@ -20,8 +20,9 @@ public class MutexHandler {
         synchronized (MutexGlobals.mutexReqQueue) {
             MutexGlobals.mutexReqQueue.add(qElement);
         }
-
-        MutexGlobals.setMutexReqClock(TobMutexGlobals.getLogicalclock());
+        synchronized (MutexGlobals.mutexReqClock) {
+            MutexGlobals.mutexReqClock = TobMutexGlobals.getLogicalclock();
+        }
 
         Message msg = new Message(MutexGlobals.id, null,
                 MessageType.MUTEX_REQUEST, TobMutexGlobals.getLogicalclock());
